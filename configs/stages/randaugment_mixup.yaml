@@ -1,0 +1,5 @@
+extends: randaugment.yaml
+experiment:
+  name: stage1_randaugment_mixup
+augmentation:
+  mixup_alpha: 0.2

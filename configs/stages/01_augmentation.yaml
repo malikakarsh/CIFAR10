@@ -1,0 +1,6 @@
+# Three comparable 200-epoch runs, including a same-hardware control.
+sweeps:
+  - control_sweep.yaml
+  - randaugment_sweep.yaml
+  - randaugment_mixup_sweep.yaml
+interleave: false

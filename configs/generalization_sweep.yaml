@@ -1,0 +1,4 @@
+# Two 200-epoch trials: RandAugment alone, then RandAugment plus mixup.
+base: generalization.yaml
+grid:
+  augmentation.mixup_alpha: [0.0, 0.2]

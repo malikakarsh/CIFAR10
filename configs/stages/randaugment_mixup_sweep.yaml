@@ -1,0 +1,3 @@
+base: randaugment_mixup.yaml
+grid:
+  experiment.seed: [42]

@@ -1,0 +1,13 @@
+# Compare directly against the completed 2.44M-parameter wider SGD run.
+# Only RandAugment is added; optimizer, architecture, and epoch budget are fixed.
+extends: base.yaml
+experiment:
+  name: wide_sgd_randaugment
+model:
+  blocks: [3, 3, 3]
+  channels: [48, 96, 192]
+training:
+  device: mps
+augmentation:
+  randaugment_ops: 2
+  randaugment_magnitude: 7

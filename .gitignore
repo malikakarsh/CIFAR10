@@ -7,6 +7,11 @@ __pycache__/
 data/
 dataset/
 runs/
+runs_hpc/
+logs/
+.venv-hpc/
+configs/generated/
+runs_next/
 submissions/
 best_sub/
 *.pt

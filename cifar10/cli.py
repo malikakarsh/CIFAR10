@@ -98,9 +98,16 @@ def main():
     p.add_argument('--set', nargs='*', default=[], metavar='KEY=VALUE')
     p.add_argument('--readme', default='README.md')
     p.add_argument('--dry-run', action='store_true')
+    p = commands.add_parser('prepare-stage', help='Build the next stage from a selected recipe; does not train')
+    p.add_argument('--source', required=True, help='Selected run/config.yaml')
+    p.add_argument('--stage', required=True, choices=['confirm', 'budget', 'scale', 'final'])
+    p.add_argument('--output-dir', required=True)
     commands.add_parser('download')
     args = parser.parse_args()
-    if args.command == 'plan':
+    if args.command == 'prepare-stage':
+        from .stages import prepare_stage
+        prepare_stage(args.source, args.stage, args.output_dir)
+    elif args.command == 'plan':
         from .pipeline import run_plan
         run_plan(args.config, args.set, args.readme, args.dry_run)
     elif args.command == 'download':

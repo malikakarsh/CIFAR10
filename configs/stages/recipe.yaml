@@ -1,0 +1,12 @@
+# Shared protocol for the next, focused experiment round.
+extends: ../base.yaml
+experiment:
+  name: stage1_wide_sgd
+  output_dir: runs_hpc
+model:
+  blocks: [3, 3, 3]
+  channels: [48, 96, 192]
+training:
+  device: cuda
+data:
+  num_workers: 4

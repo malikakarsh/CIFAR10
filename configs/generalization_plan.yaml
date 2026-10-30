@@ -1,0 +1,3 @@
+sweeps:
+  - generalization_sweep.yaml
+interleave: false

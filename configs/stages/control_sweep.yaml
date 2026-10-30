@@ -1,0 +1,3 @@
+base: control.yaml
+grid:
+  experiment.seed: [42]

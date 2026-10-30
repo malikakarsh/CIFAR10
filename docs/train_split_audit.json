@@ -1,0 +1,11 @@
+{
+  "training_rows": 50000,
+  "train_rows": 45000,
+  "validation_rows": 5000,
+  "overlapping_ids": 0,
+  "exact_duplicate_pixel_groups": 0,
+  "cross_split_duplicate_groups": 0,
+  "validation_images_with_identical_training_pixels": 0,
+  "duplicate_groups_with_conflicting_labels": 0,
+  "scope": "Permitted training images only; no hidden evaluation images or external labels examined."
+}

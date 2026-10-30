@@ -1,0 +1,6 @@
+extends: recipe.yaml
+experiment:
+  name: stage1_randaugment
+augmentation:
+  randaugment_ops: 2
+  randaugment_magnitude: 7

@@ -1,0 +1,3 @@
+base: randaugment.yaml
+grid:
+  experiment.seed: [42]

@@ -1,0 +1,3 @@
+extends: recipe.yaml
+experiment:
+  name: stage1_control

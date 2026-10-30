@@ -4,6 +4,9 @@
 |---|---|---|---:|---|
 | 2026-10-29 | First ResNet; `resnet_baseline_sweep000_20261029T224315Z_18e3b7` | `best.pt`, confirmed by user | 79.50% | Not recorded at prediction time |
 | 2026-10-29 | First ResNet, submission reported after training completed | Completed-model submission; checkpoint provenance not independently verified | **84.00%** | Completed best.pt is epoch 194; no prediction-time manifest |
+| 2026-10-30 | Deeper + wider SGD; `resnet_baseline_sweep003_20261030T114542Z_9bc762` | Latest submission reported after best-model prediction instructions | **85.30%** | Saved best checkpoint is epoch 195; no prediction-time manifest |
+
+The third screenshot reports **85.30%**, improving on 84.00% by **1.30 percentage points**. The matching local run has 95.82% best validation accuracy.
 
 The second screenshot reports 0.84000, an improvement of **4.50 percentage points** over 0.79500. The user supplied it after completing the first model and receiving instructions to submit its best checkpoint. The completed model's best local validation accuracy is 95.26%; the screenshot verifies the reported public score, not which local file was uploaded. Private accuracy and evaluation loss remain unknown.
 
