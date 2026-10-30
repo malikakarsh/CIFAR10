@@ -1,0 +1,5 @@
+# Same four architectures and epoch budget as the SGD comparison.
+base: adamw.yaml
+grid:
+  model.channels: [[32, 64, 128], [48, 96, 192]]
+  model.blocks: [[3, 3, 3], [5, 5, 5]]

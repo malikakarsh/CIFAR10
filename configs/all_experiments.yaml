@@ -1,0 +1,6 @@
+# Alternates SGD then AdamW for each of the four architectures: 8 runs total.
+# Existing matching SGD runs are automatically adopted, resumed, or skipped.
+sweeps:
+  - compare_mps.yaml
+  - compare_adamw_mps.yaml
+interleave: true

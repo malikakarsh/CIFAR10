@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cifar10-resnet-lab"
+version = "0.1.0"
+description = "Config-driven, parameter-budgeted CIFAR-10 experiments"
+requires-python = ">=3.10"
+dependencies = ["torch>=2.3,<3", "torchvision>=0.18,<1", "numpy>=1.24,<3", "Pillow>=10", "PyYAML>=6"]
+
+[project.optional-dependencies]
+download = ["kagglehub>=0.3"]
+
+[project.scripts]
+cifar10 = "cifar10.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["cifar10*"]

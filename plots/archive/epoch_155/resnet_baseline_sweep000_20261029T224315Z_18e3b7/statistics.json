@@ -1,0 +1,32 @@
+{
+  "run": "runs/resnet_baseline_sweep000_20261029T224315Z_18e3b7",
+  "epochs_plotted": 155,
+  "latest": {
+    "epoch": 155.0,
+    "lr": 0.012785930313894859,
+    "train_loss": 0.04345005132555962,
+    "train_accuracy_mixup_weighted": 0.9864444444444445,
+    "val_loss": 0.25625608959198,
+    "val_accuracy": 0.9272,
+    "seconds": 24.565751916961744
+  },
+  "best_accuracy_epoch": {
+    "epoch": 154.0,
+    "lr": 0.013329437634325347,
+    "train_loss": 0.053694348596864276,
+    "train_accuracy_mixup_weighted": 0.9827111111111111,
+    "val_loss": 0.21988870964050292,
+    "val_accuracy": 0.9348,
+    "seconds": 24.195026832981966
+  },
+  "lowest_validation_loss_epoch": {
+    "epoch": 154.0,
+    "lr": 0.013329437634325347,
+    "train_loss": 0.053694348596864276,
+    "train_accuracy_mixup_weighted": 0.9827111111111111,
+    "val_loss": 0.21988870964050292,
+    "val_accuracy": 0.9348,
+    "seconds": 24.195026832981966
+  },
+  "source_metrics_sha256": "14d86649e90e08396f3a46802be78532b0b574084f7463aa196e1b1587b38854"
+}

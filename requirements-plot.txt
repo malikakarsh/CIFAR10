@@ -1,0 +1,2 @@
+# Optional plotting tools; the training environment is unchanged.
+matplotlib>=3.8,<4

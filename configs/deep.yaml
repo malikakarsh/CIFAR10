@@ -1,0 +1,6 @@
+extends: base.yaml
+experiment:
+  name: resnet_deep
+model:
+  blocks: [5, 5, 5]
+  channels: [32, 64, 128]

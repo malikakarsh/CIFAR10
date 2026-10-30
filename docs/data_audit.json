@@ -1,0 +1,23 @@
+{
+  "root": "/Users/akarsh/Documents/projects/fastInfer/CIFAR-10/dataset",
+  "training_images": 50000,
+  "train_split": 45000,
+  "validation_split": 5000,
+  "test_images": 2000,
+  "class_counts": {
+    "0": 5000,
+    "1": 5000,
+    "2": 5000,
+    "3": 5000,
+    "4": 5000,
+    "5": 5000,
+    "6": 5000,
+    "7": 5000,
+    "8": 5000,
+    "9": 5000
+  },
+  "split_seed": 42,
+  "metadata_sha256": "60fa855c0c8122bf0a8324ff1a9604b605566adcf8a0f23da53180f00269af27",
+  "all_images_verified": true,
+  "sample_submission_ids_match": true
+}

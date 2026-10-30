@@ -1,0 +1,13 @@
+extends: base.yaml
+experiment:
+  name: resnet_wide
+model:
+  blocks: [3, 3, 3]
+  channels: [48, 96, 192]
+  dropout: 0.1
+augmentation:
+  randaugment_ops: 2
+  random_erasing: 0.1
+  mixup_alpha: 0.2
+training:
+  label_smoothing: 0.05

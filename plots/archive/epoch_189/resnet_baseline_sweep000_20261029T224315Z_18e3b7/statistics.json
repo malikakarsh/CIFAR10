@@ -1,0 +1,32 @@
+{
+  "run": "runs/resnet_baseline_sweep000_20261029T224315Z_18e3b7",
+  "epochs_plotted": 189,
+  "latest": {
+    "epoch": 189.0,
+    "lr": 0.0008903846027677419,
+    "train_loss": 0.003594385887351301,
+    "train_accuracy_mixup_weighted": 0.9998,
+    "val_loss": 0.18201350173950195,
+    "val_accuracy": 0.9512,
+    "seconds": 39.35366924991831
+  },
+  "best_accuracy_epoch": {
+    "epoch": 187.0,
+    "lr": 0.0012027675088412504,
+    "train_loss": 0.00348555032439116,
+    "train_accuracy_mixup_weighted": 0.9998222222222222,
+    "val_loss": 0.18269061861038208,
+    "val_accuracy": 0.9518,
+    "seconds": 39.676501540932804
+  },
+  "lowest_validation_loss_epoch": {
+    "epoch": 188.0,
+    "lr": 0.0010401500639329593,
+    "train_loss": 0.0034595380407240655,
+    "train_accuracy_mixup_weighted": 0.9998222222222222,
+    "val_loss": 0.18117458801269531,
+    "val_accuracy": 0.9512,
+    "seconds": 35.316998999915086
+  },
+  "source_metrics_sha256": "93460b1b547726cffcb9a6b792d43fa6edd4a293b13f0beed9dd7c20a4f2319a"
+}

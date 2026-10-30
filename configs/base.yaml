@@ -1,0 +1,56 @@
+experiment:
+  name: resnet_baseline
+  output_dir: runs
+  seed: 42
+  deterministic: true
+data:
+  root: dataset
+  train_csv: train_labels.csv
+  test_csv: test.csv
+  sample_submission: sample_submission.csv
+  train_dir: train_images
+  test_dir: test_images
+  id_column: id
+  label_column: label
+  # Set to a CSV column containing filenames, or leave null to use {id}.png.
+  filename_column: filename
+  filename_template: "{id}.png"
+  val_fraction: 0.1
+  split_seed: 42
+  num_workers: 0
+  mean: [0.4914, 0.4822, 0.4465]
+  std: [0.2470, 0.2435, 0.2616]
+model:
+  blocks: [3, 3, 3]
+  channels: [32, 64, 128]
+  kernel_size: 3
+  dropout: 0.0
+  num_classes: 10
+  max_parameters: 5000000
+augmentation:
+  crop_padding: 4
+  horizontal_flip: true
+  randaugment_ops: 0
+  randaugment_magnitude: 9
+  random_erasing: 0.0
+  mixup_alpha: 0.0
+training:
+  epochs: 200
+  batch_size: 128
+  device: auto
+  amp: true
+  label_smoothing: 0.0
+  grad_clip: 0.0
+optimizer:
+  name: sgd
+  lr: 0.1
+  momentum: 0.9
+  nesterov: true
+  weight_decay: 0.0005
+scheduler:
+  name: cosine
+  warmup_epochs: 5
+  min_lr: 0.0001
+inference:
+  batch_size: 256
+  horizontal_flip_tta: false

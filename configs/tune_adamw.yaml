@@ -1,0 +1,6 @@
+# Six fresh runs on ONE fixed architecture; run after the SGD comparison.
+# Override model.blocks/channels to match the best SGD architecture first.
+base: adamw.yaml
+grid:
+  optimizer.lr: [0.0003, 0.001, 0.003]
+  optimizer.weight_decay: [0.0001, 0.01]
