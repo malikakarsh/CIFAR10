@@ -1,0 +1,6 @@
+# Resume/finish the 400-epoch comparison before running the 600-epoch attention trial.
+sweeps:
+  - ../sla/control_sweep.yaml
+  - ../sla/distillation_sweep.yaml
+  - 600_sweep.yaml
+interleave: false

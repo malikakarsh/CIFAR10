@@ -61,10 +61,13 @@ def inference_probabilities(model, images, flip=False, translate=False, rotation
     for crop, weight in crops:
         for view in (crop, crop.flip(-1)) if flip else (crop,):
             factor = weight / (2 if flip else 1)
-            features = model.features(four_views(view) if rotation_vote else view)
-            ordinary = ordinary + factor * model.classifier(features[:len(images)])
             if rotation_vote:
+                features = model.features(four_views(view))
+                logits = model.classifier(features[:len(images)])
                 aggregate = aggregate + factor * aggregate_logits(model.joint_classifier(features))
+            else:
+                logits = model(view)
+            ordinary = ordinary + factor * logits
     if rotation_vote:
         return (ordinary.softmax(1) + aggregate.softmax(1)) / 2
     return ordinary.softmax(1)

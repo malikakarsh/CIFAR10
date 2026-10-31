@@ -1,0 +1,10 @@
+extends: base.yaml
+experiment:
+  name: attention_resnet600
+  output_dir: runs_attention600
+training:
+  epochs: 600
+inference:
+  batch_size: 64
+  horizontal_flip_tta: true
+  translation_tta: true

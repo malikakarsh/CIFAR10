@@ -90,6 +90,8 @@ def main():
     p.add_argument('--data-root')
     p.add_argument('--device', default='auto')
     p.add_argument('--tta', action=argparse.BooleanOptionalAction, default=None)
+    p.add_argument('--translation-tta', action=argparse.BooleanOptionalAction, default=None,
+                   help='Override reflected one-pixel translation TTA for any architecture')
     p = commands.add_parser('report')
     p.add_argument('--runs', default='runs')
     p.add_argument('--readme', default='README.md')
@@ -118,7 +120,8 @@ def main():
         print(kagglehub.competition_download('cifar-10-res-net-architecture-challenge-dl'))
         print('Set data.root to the printed path. Competition rules must be accepted on Kaggle.')
     elif args.command == 'predict':
-        predict(args.checkpoint, args.output, args.data_root, args.device, args.tta)
+        predict(args.checkpoint, args.output, args.data_root, args.device, args.tta,
+                args.translation_tta)
     elif args.command == 'report':
         report(args.runs, args.readme)
     elif args.command == 'sweep':

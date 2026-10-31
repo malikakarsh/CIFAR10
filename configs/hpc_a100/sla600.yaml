@@ -1,0 +1,9 @@
+extends: ../sla/distillation.yaml
+experiment:
+  name: a100_sla600
+  output_dir: runs_hpc/a100_experiments
+data:
+  num_workers: 4
+training:
+  device: cuda
+  epochs: 600

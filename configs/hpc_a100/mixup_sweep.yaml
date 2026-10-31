@@ -1,0 +1,5 @@
+base: base.yaml
+overrides:
+  experiment.name: a100_mixup02
+grid:
+  augmentation.mixup_alpha: [0.2]

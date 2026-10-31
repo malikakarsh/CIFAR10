@@ -1,0 +1,30 @@
+{
+  "checkpoint": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/attention600/attention_resnet600_sweep000_20261031T174911Z_744138/best.pt",
+  "checkpoint_epoch": 583,
+  "parameters": 4534066,
+  "rows": 2000,
+  "csv": "submissions/submission_attention600_tta.csv",
+  "csv_sha256": "90776014fc1fc2668292ee149d4217e41dfd3721c1679e03d19f9e8ed835f006",
+  "horizontal_flip_tta": true,
+  "translation_tta": true,
+  "rotation_vote": false,
+  "best_metrics": {
+    "epoch": 583,
+    "lr": 0.00030176117885150625,
+    "train_loss": 0.44271076367166307,
+    "train_accuracy_mixup_weighted": 0.9371111111111111,
+    "val_loss": 0.12665336475372316,
+    "val_accuracy": 0.971,
+    "seconds": 13.449673544000689
+  },
+  "public_accuracy_reported": 0.888,
+  "public_score_source": "User-provided Kaggle screenshot naming submission_attention600_tta.csv",
+  "epochs_completed": 600,
+  "validation_accuracy": 0.971,
+  "training_loss": 0.44271076367166307,
+  "validation_loss": 0.12665336475372316,
+  "source_csv": "exports/attention600/submission_attention600_tta.csv",
+  "local_summary": "runs_hpc/attention600/attention_resnet600_sweep000_20261031T174911Z_744138/summary.json",
+  "local_metrics": "runs_hpc/attention600/attention_resnet600_sweep000_20261031T174911Z_744138/metrics.csv",
+  "local_metadata": "submissions/submission_attention600_tta.metadata.json"
+}

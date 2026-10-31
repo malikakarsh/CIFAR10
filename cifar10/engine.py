@@ -219,6 +219,17 @@ def train(config, resume=None):
             if not torch.isfinite(loss):
                 raise RuntimeError(f"Nonfinite loss at epoch {epoch + 1}")
             scaler.scale(loss).backward()
+            sam_rho = opt.get('sam_rho', 0.)
+            if sam_rho > 0:
+                from .sam import perturb_weights, batch_statistics_without_updates
+                with perturb_weights(model, sam_rho), batch_statistics_without_updates(model):
+                    optimizer.zero_grad(set_to_none=True)
+                    perturbed_logits = model(mixed)
+                    perturbed_loss = (lam * criterion(perturbed_logits, labels)
+                                      + (1 - lam) * criterion(perturbed_logits, labels[order]))
+                    if not torch.isfinite(perturbed_loss):
+                        raise RuntimeError(f'Nonfinite SAM second-pass loss at epoch {epoch + 1}')
+                    perturbed_loss.backward()
             if config['training']['grad_clip'] > 0:
                 scaler.unscale_(optimizer)
                 nn.utils.clip_grad_norm_(model.parameters(), config['training']['grad_clip'])
@@ -279,7 +290,8 @@ def train(config, resume=None):
 
 
 @torch.inference_mode()
-def predict(checkpoint_path, output, data_root=None, device_name='auto', tta=None):
+def predict(checkpoint_path, output, data_root=None, device_name='auto', tta=None,
+            translation_tta=None):
     state = torch.load(checkpoint_path, map_location='cpu', weights_only=True)
     config = state['config']
     if data_root:
@@ -294,14 +306,16 @@ def predict(checkpoint_path, output, data_root=None, device_name='auto', tta=Non
     device = device_for(device_name)
     model.to(device).eval()
     use_tta = config['inference']['horizontal_flip_tta'] if tta is None else tta
+    use_translation = (use_tta and config['inference'].get('translation_tta', False)
+                       if translation_tta is None else translation_tta)
     from .sla import probabilities as model_probabilities, inference_probabilities
     rotation_vote = config['inference'].get('rotation_vote', False)
     predictions = {}
     for images, ids in loader(ImageDataset(rows, config, test=True), config):
         images = images.to(device)
-        if config['model'].get('architecture') == 'preact_resnet':
+        if config['model'].get('architecture') == 'preact_resnet' or use_translation:
             probabilities = inference_probabilities(model, images, use_tta,
-                use_tta and config['inference'].get('translation_tta', False), rotation_vote)
+                use_translation, rotation_vote)
         else:
             probabilities = model_probabilities(model, images, rotation_vote)
             if use_tta:
@@ -313,5 +327,11 @@ def predict(checkpoint_path, output, data_root=None, device_name='auto', tta=Non
         writer = csv.writer(f)
         writer.writerow(['id', 'label'])
         writer.writerows((r['id'], predictions[r['id']]) for r in sample)
+    metadata = {'checkpoint': str(checkpoint_path), 'checkpoint_epoch': state['epoch'] + 1,
+                'parameters': count, 'rows': len(predictions), 'csv': str(output),
+                'csv_sha256': hashlib.sha256(output.read_bytes()).hexdigest(),
+                'horizontal_flip_tta': bool(use_tta), 'translation_tta': bool(use_translation),
+                'rotation_vote': rotation_vote, 'best_metrics': state.get('best_metrics')}
+    output.with_suffix('.metadata.json').write_text(json.dumps(metadata, indent=2) + '\n')
     print(f"Wrote {len(predictions)} predictions to {output}; parameters: {count:,}")
     return output

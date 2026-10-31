@@ -1,0 +1,25 @@
+extends: ../attention/base.yaml
+experiment:
+  name: a100_channel_attention
+  output_dir: runs_hpc/a100_experiments
+model:
+  blocks: [4, 4, 3]
+  channels: [64, 128, 256]
+  dropout: 0.0
+data:
+  num_workers: 4
+augmentation:
+  trivialaugment_first: true
+  cutout_size: 12
+training:
+  device: cuda
+  epochs: 600
+  label_smoothing: 0.1
+  amp: false
+scheduler:
+  min_lr: 0.0
+  per_step: true
+inference:
+  batch_size: 64
+  horizontal_flip_tta: true
+  translation_tta: true

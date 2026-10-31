@@ -15,6 +15,7 @@ configs/generated/
 runs_next/
 runs_local300/
 runs_attention/
+runs_attention600/
 runs_sla/
 submissions/
 best_sub/

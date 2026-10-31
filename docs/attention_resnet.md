@@ -53,3 +53,11 @@ Select the recipe on the existing validation split. Confirm promising difference
 - Gidaris et al., [Unsupervised Representation Learning by Predicting Image Rotations](https://arxiv.org/abs/1803.07728). Our auxiliary supervised-training objective is an experimental use of this task.
 - Müller and Hutter, [TrivialAugment](https://arxiv.org/abs/2103.10158), applied through torchvision.
 - DeVries and Taylor, [Improved Regularization of Convolutional Neural Networks with Cutout](https://arxiv.org/abs/1708.04552).
+
+## Longer schedule and spatial prediction augmentation
+
+`configs/attention/600.yaml` inherits the original attention control and changes the training budget to 600 epochs, the output directory to `runs_attention600`, and prediction settings to mirror/translation augmentation with inference batch size 64. It does not add an auxiliary task or change the architecture. All 4,534,066 parameters train from scratch; cosine decay runs over the full 600 epochs with the original five-epoch warmup and minimum LR 0.0001.
+
+The completed 300-epoch checkpoint remains the 97.14% validation / 87.80% reported public baseline. `predict --tta --translation-tta` can apply spatial augmentation to that existing checkpoint without editing its saved config. The prediction rule averages logits over the original crop (weight 0.5) and two reflected one-pixel diagonal translations (weight 0.25 each), with equal mirror averaging within each crop. It then applies softmax. Legacy mirror-only inference remains unchanged unless translation is requested.
+
+Validation still uses the ordinary ten-class head without TTA, so its metrics remain comparable across the 300- and 600-epoch attention trials. Compare their submissions using the same inference settings. Neither the augmented 300-epoch public score nor any 600-epoch result is known yet. Prediction writes the checkpoint epoch, flags and CSV SHA-256 to a `.metadata.json` sidecar; obtain public scores only through normal competition submissions.

@@ -1,5 +1,6 @@
 from copy import deepcopy
 from pathlib import Path
+import math
 import yaml
 
 
@@ -12,7 +13,7 @@ OPTIONAL = {
     'training': {'rotation_weight', 'sla'},
     'inference': {'rotation_vote', 'translation_tta'},
     'scheduler': {'per_step'},
-    'optimizer': {'exclude_norm_bias_decay'},
+    'optimizer': {'exclude_norm_bias_decay', 'sam_rho'},
 }
 
 
@@ -109,6 +110,11 @@ def validate(c):
         raise ValueError('SLA requires unmixed labels and no auxiliary rotation task')
     if c['inference'].get('rotation_vote', False) and not m.get('sla_head', False):
         raise ValueError('Rotation voting requires an SLA head')
+    rho = c['optimizer'].get('sam_rho', 0.)
+    if not isinstance(rho, (float, int)) or not math.isfinite(rho) or rho < 0:
+        raise ValueError('sam_rho must be finite and nonnegative')
+    if rho > 0 and (c['optimizer']['name'] != 'sgd' or t['amp'] or t.get('sla', False) or weight):
+        raise ValueError('SAM currently requires SGD, training.amp=false, and no auxiliary/SLA objective')
 
 
 def save_config(config, path):

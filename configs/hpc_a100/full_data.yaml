@@ -1,0 +1,5 @@
+extends: base.yaml
+experiment:
+  name: a100_control600_full50k
+data:
+  val_fraction: 0.0

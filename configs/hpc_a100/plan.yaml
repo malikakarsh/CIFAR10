@@ -1,0 +1,12 @@
+# Each run has a full cosine schedule. Allocation timeout leaves resumable checkpoints.
+# Does not include attention600: the launcher waits for that existing job's queue lock.
+sweeps:
+  - control_sweep.yaml
+  - sam_sweep.yaml
+  - sla600_sweep.yaml
+  - full_data_sweep.yaml
+  - channel_attention_sweep.yaml
+  - mixup_sweep.yaml
+  - randaugment_sweep.yaml
+  - seed_sweep.yaml
+interleave: false

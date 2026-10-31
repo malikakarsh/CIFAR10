@@ -1,0 +1,5 @@
+extends: base.yaml
+experiment:
+  name: a100_sam005
+optimizer:
+  sam_rho: 0.05

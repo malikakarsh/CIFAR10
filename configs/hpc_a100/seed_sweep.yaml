@@ -1,0 +1,5 @@
+base: base.yaml
+overrides:
+  experiment.name: a100_sgd_control_seed43
+grid:
+  experiment.seed: [43]

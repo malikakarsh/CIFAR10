@@ -1,0 +1,10 @@
+extends: ../sla/base.yaml
+experiment:
+  name: a100_sgd_control
+  output_dir: runs_hpc/a100_experiments
+data:
+  num_workers: 4
+training:
+  device: cuda
+  epochs: 600
+  amp: false

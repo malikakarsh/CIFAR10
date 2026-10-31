@@ -1,4 +1,5 @@
 import csv
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -12,11 +13,31 @@ from cifar10.config import load_config
 from cifar10.data import ImageDataset
 from cifar10.engine import optimizer_parameters, rotation_batch, train, predict
 from cifar10.models import build_model
+from cifar10.sla import inference_probabilities
 
 
 class AttentionTests(unittest.TestCase):
     def setUp(self):
         torch.set_num_threads(1)
+
+    def test_600_budget_and_spatial_tta_without_feature_interface(self):
+        c = load_config('configs/attention/600.yaml')
+        self.assertEqual(c['training']['epochs'], 600)
+        self.assertEqual(build_model(c['model'])[1], 4_534_066)
+        self.assertEqual(load_config('configs/attention/base.yaml')['training']['epochs'], 300)
+
+        class PositionModel(torch.nn.Module):
+            def forward(self, x):
+                return x[:, 0, 0, :10]
+
+        model = PositionModel()
+        images = torch.randn(2, 3, 32, 32)
+        padded = torch.nn.functional.pad(images, (1, 1, 1, 1), mode='reflect')
+        mirror = lambda x: (model(x) + model(x.flip(-1))) / 2
+        expected = (.5 * mirror(images) + .25 * mirror(padded[:, :, :32, :32])
+                    + .25 * mirror(padded[:, :, 2:, 2:])).softmax(1)
+        actual = inference_probabilities(model, images, flip=True, translate=True)
+        self.assertTrue(torch.allclose(actual, expected))
 
     def test_parameter_counts_and_old_config_compatibility(self):
         for name, expected in [('base', 4_534_066), ('rotation', 4_534_966)]:
@@ -90,7 +111,12 @@ class AttentionTests(unittest.TestCase):
             self.assertIn('rotation_classifier.weight', state['model'])
             self.assertTrue(np.isfinite(result['final_metrics']['train_rotation_loss']))
             self.assertTrue(np.isfinite(result['final_metrics']['val_loss']))
-            output = predict(result['best_checkpoint'], root / 'submission.csv', device_name='cpu')
+            output = predict(result['best_checkpoint'], root / 'submission.csv', device_name='cpu',
+                             tta=True, translation_tta=True)
+            metadata = json.loads(output.with_suffix('.metadata.json').read_text())
+            self.assertTrue(metadata['horizontal_flip_tta'])
+            self.assertTrue(metadata['translation_tta'])
+            self.assertEqual(metadata['checkpoint_epoch'], 1)
             with output.open() as f:
                 records = list(csv.DictReader(f))
             self.assertEqual(records[0]['id'], '001')

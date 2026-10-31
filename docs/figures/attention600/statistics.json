@@ -1,0 +1,32 @@
+{
+  "run": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/attention600/attention_resnet600_sweep000_20261031T174911Z_744138",
+  "epochs_plotted": 600,
+  "latest": {
+    "epoch": 600.0,
+    "lr": 0.0001,
+    "train_loss": 0.4398488553576999,
+    "train_accuracy_mixup_weighted": 0.9386444444444444,
+    "val_loss": 0.12671234719753266,
+    "val_accuracy": 0.9702,
+    "seconds": 13.76018879700132
+  },
+  "best_accuracy_epoch": {
+    "epoch": 583.0,
+    "lr": 0.00030176117885150625,
+    "train_loss": 0.44271076367166307,
+    "train_accuracy_mixup_weighted": 0.9371111111111111,
+    "val_loss": 0.12665336475372316,
+    "val_accuracy": 0.971,
+    "seconds": 13.449673544000689
+  },
+  "lowest_validation_loss_epoch": {
+    "epoch": 581.0,
+    "lr": 0.0003519846383025305,
+    "train_loss": 0.4418909805456797,
+    "train_accuracy_mixup_weighted": 0.9386666666666666,
+    "val_loss": 0.12662829258441924,
+    "val_accuracy": 0.97,
+    "seconds": 13.313401739000255
+  },
+  "source_metrics_sha256": "5a03eb935add83f59505cee2cfaed65db4466ed1234278056b571d77666618c8"
+}
