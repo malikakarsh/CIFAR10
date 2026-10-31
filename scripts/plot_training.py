@@ -69,7 +69,7 @@ def main():
     cutoff = max(1, epochs[-1] - 59)
     recent = [r for r in rows if r['epoch'] >= cutoff]
     axes[0, 1].set_xlim(cutoff, epochs[-1]+1)
-    axes[0, 1].set_ylim(0, max(r['val_loss'] for r in recent)*1.12)
+    axes[0, 1].set_ylim(0, max(max(r['train_loss'], r['val_loss']) for r in recent)*1.12)
     axes[0, 1].text(.03, .96, f"Latest train: {last['train_loss']:.3f}\nLatest validation: {last['val_loss']:.3f}",
                     transform=axes[0, 1].transAxes, va='top', fontsize=10,
                     bbox={'facecolor': 'white', 'alpha': .8, 'edgecolor': 'none'})

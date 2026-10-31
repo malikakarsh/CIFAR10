@@ -17,7 +17,7 @@ augmentation:
   cutout_size: 12
 training:
   device: mps
-  epochs: 300
+  epochs: 400
   batch_size: 128
   label_smoothing: 0.1
   sla: false

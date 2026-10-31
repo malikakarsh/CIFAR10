@@ -8,10 +8,10 @@ The backbone has three stages with `[4,4,3]` two-convolution residual blocks and
 
 | Trial | Parameters | Epochs | Status |
 |---|---:|---:|---|
-| Plain pre-activation control | 4,696,394 | 300 | Not trained |
-| Pre-activation SLA+SD | 4,706,674 | 300 | Not trained |
+| Plain pre-activation control | 4,696,394 | 400 | Complete: 97.26% validation, 88.80% reported public |
+| Pre-activation SLA+SD | 4,706,674 | 400 | In progress |
 
-Both trials use the fixed seed-42 stratified 45,000/5,000 split, batch size 128, Nesterov SGD with peak LR 0.1, momentum 0.9, weight decay 0.0005 on convolution/linear weights only, five warmup epochs, and cosine decay to zero updated each optimizer step. Batch size counts original images; SLA expands each batch to 512 views. The chosen duration retains the project's requested 300 epochs. Changing the batch size requires deliberately retuning LR; there is no implicit LR scaling.
+Both trials use the fixed seed-42 stratified 45,000/5,000 split, batch size 128, Nesterov SGD with peak LR 0.1, momentum 0.9, weight decay 0.0005 on convolution/linear weights only, five warmup epochs, and cosine decay to zero updated each optimizer step. Batch size counts original images; SLA expands each batch to 512 views. Both trials use the requested 400-epoch budget, with cosine decay spanning all 400 epochs. This is a matched comparison of objectives at that budget, not a controlled test of 300 versus 400 epochs. Changing the batch size requires deliberately retuning LR; there is no implicit LR scaling.
 
 Augmentation applies [TrivialAugmentWide](https://arxiv.org/abs/2103.10158), reflected-padding random crop, horizontal flip, normalization, and a 12-pixel [Cutout](https://arxiv.org/abs/1708.04552) mask. Ordinary classification uses label smoothing 0.1. No dropout, mixup, or separate four-output rotation classifier is enabled. Decoded images are cached in CPU RAM; augmentation runs on the CPU. This is not an accelerator-resident input pipeline.
 
@@ -49,4 +49,4 @@ caffeinate -i python -m cifar10 plan --config configs/sla/only_sla.yaml \
   --readme runs_sla/report.md
 ```
 
-After comparing validation results, freeze the selected recipe before final retraining on all 50,000 permitted images. Use `prepare-stage --stage final` with the selected run's saved config; it creates a separate plan and does not train automatically. Full-data runs have no validation loss or validation-based best checkpoint, so use their `last.pt`. Do not tune using hidden evaluation images. No accuracy result is claimed for this new recipe yet.
+After comparing validation results, freeze the selected recipe before final retraining on all 50,000 permitted images. Use `prepare-stage --stage final` with the selected run's saved config; it creates a separate plan and does not train automatically. Full-data runs have no validation loss or validation-based best checkpoint, so use their `last.pt`. Do not tune using hidden evaluation images. The completed control has measured results above; no completed SLA+SD result is available yet.

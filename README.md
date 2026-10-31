@@ -4,7 +4,7 @@ Configurable PyTorch experiments for CIFAR-10 classification under a **5-million
 
 ## Results
 
-**Best completed validation accuracy: 97.14%. Best reported public Kaggle accuracy: 87.80%.**
+**Best completed validation accuracy: 97.26%. Best reported public Kaggle accuracy: 88.80%.**
 
 <!-- RESULTS:START -->
 | Architecture | Optimizer | Parameters | Epochs completed | Best epoch | Training loss | Validation loss | Validation accuracy |
@@ -17,9 +17,10 @@ Configurable PyTorch experiments for CIFAR-10 classification under a **5-million
 | Wider | AdamW | 2,436,346 | 200/200 | 198 | 0.0002 | 0.3893 | 94.10% |
 | Deeper + wider | SGD | 4,180,858 | 200/200 | 195 | 0.0016 | 0.1761 | 95.82% |
 | Deeper + wider | AdamW | 4,180,858 | 143/200 | 136 | 0.0027 | 0.3771 | 94.34% |
-| Attention ResNet control | SGD | 4,534,066 | 300/300 | 300 | 0.4666 | **0.1324** | **97.14%** |
+| Attention ResNet control | SGD | 4,534,066 | 300/300 | 300 | 0.4666 | **0.1324** | 97.14% |
+| Pre-activation control | SGD | 4,696,394 | 400/400 | 389 | 0.6549 | 0.1689 | **97.26%** |
 
-Losses and accuracy are reported at each run's highest-validation-accuracy epoch. Eight runs are complete; the larger AdamW trial has 143/200 epochs saved and remains incomplete. All runs use the same stratified 45,000/5,000 split. Training loss uses augmented images and the configured label smoothing; validation loss is ordinary cross-entropy on unaugmented images. Training losses across different objectives are not directly comparable.
+Losses and accuracy are reported at each run's highest-validation-accuracy epoch. Nine runs are complete; the larger AdamW trial has 143/200 epochs saved and remains incomplete. All runs use the same stratified 45,000/5,000 split. Training loss uses augmented images and the configured label smoothing; validation loss is ordinary cross-entropy on unaugmented images. Training losses across different objectives are not directly comparable.
 <!-- RESULTS:END -->
 
 | Public Kaggle submission | Accuracy |
@@ -28,11 +29,21 @@ Losses and accuracy are reported at each run's highest-validation-accuracy epoch
 | Completed baseline submission | 84.00% |
 | Deeper + wider SGD submission | 85.30% |
 | Attention ResNet control, intermediate epoch 156 | 81.10% |
-| Attention ResNet control, completed epoch 300 | **87.80%** |
+| Attention ResNet control, completed epoch 300 | 87.80% |
+| Pre-activation control, best epoch 389 of 400 | **88.80%** |
 
 Public scores are reported from leaderboard screenshots. Hidden evaluation labels are unavailable; evaluation loss and private accuracy cannot be calculated. Details: [submission history](docs/leaderboard.md).
 
+The completed pre-activation control achieved **97.26% validation accuracy** and **88.80% reported public accuracy**, improving on the attention model by 0.12 and 1.00 percentage points respectively. Its best checkpoint is epoch 389 of 400. This submission uses the configured mirror/translation augmentation, whereas the attention submission used standard inference, so the public-score difference includes changes in inference as well as training.
+
 The completed attention control achieved **97.14% validation accuracy**, improving on the previous 95.82% best by **1.32 percentage points**, with validation loss falling from 0.1761 to **0.1324**. Its checkpoint is `runs_attention/attention_resnet_sweep000_20261031T025638Z_303819/best.pt`. This result is from the ten-class attention model without an auxiliary rotation task or inference augmentation; its reported public score is **87.80%**, improving on 85.30% by **2.50 percentage points**. Matched completed SGD recipes also outperform their AdamW counterparts. These are single-seed validation results; see the earlier [model comparison](docs/model_comparison.md).
+
+
+### Pre-activation control learning curves
+
+![Pre-activation ResNet control: loss, accuracy, and learning rate over 400 epochs](docs/figures/preact_control_sweep000_20261031T071758Z_ed2534/learning_curves.png)
+
+Thin lines show per-epoch metrics; bold lines show trailing 10-epoch means. Best validation accuracy is **97.26% at epoch 389**, with training loss **0.6549** and validation loss **0.1689**. Training uses augmentation and label smoothing; validation uses unaugmented images and ordinary cross-entropy. The **88.80% public score** is a separate submission result, not a curve measured during training. [Metric snapshot](docs/figures/preact_control_sweep000_20261031T071758Z_ed2534/metrics_snapshot.csv).
 
 ## Setup
 
@@ -67,14 +78,14 @@ python -m cifar10 check-data --config configs/base.yaml
 
 ## Current experiment plan: Pre-activation ResNet + SLA
 
-The attention control has completed 300 epochs. The next comparison uses a plain pre-activation ResNet, followed by the same backbone with self-supervised label augmentation and self-distillation (SLA+SD). No completed results are available for these two recipes yet. The earlier attention checkpoint's **81.10%** public result was measured at epoch 156; the completed model's reported public score is **87.80%**.
+The plain pre-activation control has completed 400 epochs, with **97.26% validation accuracy** and **88.80% reported public accuracy**. The SLA+SD comparison is in progress; no completed SLA result is available yet.
 
 | Trial | Blocks | Channels | Trainable parameters | Epochs |
 |---|---|---|---:|---:|
-| Pre-activation control | `[4,4,3]` | `[64,128,256]` | 4,696,394 | 300 |
-| Pre-activation SLA+SD | `[4,4,3]` | `[64,128,256]` | 4,706,674 | 300 |
+| Pre-activation control | `[4,4,3]` | `[64,128,256]` | 4,696,394 | 400 |
+| Pre-activation SLA+SD | `[4,4,3]` | `[64,128,256]` | 4,706,674 | 400 |
 
-Both use batch size 128, Nesterov SGD, five warmup epochs, cosine decay per optimizer step, TrivialAugmentWide, crop/flip, 12-pixel Cutout, and label smoothing 0.1. Weight decay excludes bias and normalization parameters. SLA learns 40 joint class/rotation labels and distills their aggregated predictions into a ten-class head. Its four rotated views increase computation per batch. Prediction supports mirror/translation augmentation and combined head probabilities.
+Both use 400 epochs, batch size 128, Nesterov SGD, five warmup epochs, cosine decay per optimizer step, TrivialAugmentWide, crop/flip, 12-pixel Cutout, and label smoothing 0.1. Weight decay excludes bias and normalization parameters. SLA learns 40 joint class/rotation labels and distills their aggregated predictions into a ten-class head. Its four rotated views increase computation per batch. Prediction supports mirror/translation augmentation and combined head probabilities.
 
 ```bash
 source .venv/bin/activate

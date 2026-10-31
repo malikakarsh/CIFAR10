@@ -7,8 +7,11 @@
 | 2026-10-30 | Deeper + wider SGD; `resnet_baseline_sweep003_20261030T114542Z_9bc762` | Latest submission reported after best-model prediction instructions | 85.30% | Saved best checkpoint is epoch 195; no prediction-time manifest |
 | 2026-10-30 | Attention ResNet control, intermediate | `submissions/attention_intermediate.pt` | 81.10% | 156; frozen checkpoint verified |
 | 2026-10-31 | Attention ResNet control, completed; `attention_resnet_sweep000_20261031T025638Z_303819` | `best.pt`, prediction command supplied before reported score | **87.80%** | 300; checkpoint verified |
+| 2026-10-31 | Pre-activation control; `preact_control_sweep000_20261031T071758Z_ed2534` | `best.pt`, prediction command supplied with configured mirror/translation TTA | **88.80%** | 389 of 400; saved summary verified |
 
-The latest screenshot reports **87.80%**, an improvement of **2.50 percentage points** over 85.30%. The completed attention model achieved **97.14% validation accuracy**, with **0.4666 training loss** and **0.1324 validation loss** at epoch 300.
+The latest screenshot reports **88.80%**, improving on 87.80% by **1.00 percentage point**. The pre-activation control recorded **97.26% validation accuracy**, **0.6549 training loss**, and **0.1689 validation loss** at its best epoch, 389. Validation is unaugmented; submission inference includes mirror/translation augmentation. The public comparison with the attention submission therefore does not isolate architecture or epoch count.
+
+The attention screenshot reports **87.80%**, an improvement of **2.50 percentage points** over 85.30%. The completed attention model achieved **97.14% validation accuracy**, with **0.4666 training loss** and **0.1324 validation loss** at epoch 300.
 
 The third screenshot reports **85.30%**, improving on 84.00% by **1.30 percentage points**. The matching local run has 95.82% best validation accuracy.
 

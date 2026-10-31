@@ -1,0 +1,14 @@
+{
+  "checkpoint": "runs_sla/preact_control_sweep000_20261031T071758Z_ed2534/best.pt",
+  "checkpoint_epoch": 389,
+  "validation_accuracy": 0.9726,
+  "training_loss": 0.6549296303537157,
+  "validation_loss": 0.1688933868408203,
+  "public_accuracy_reported": 0.888,
+  "public_score_source": "User-provided Kaggle screenshot following supplied prediction command; uploaded CSV identity not independently verified",
+  "csv": "submissions/submission_preact_control.csv",
+  "csv_sha256": "af72c1466987134f3d00028724b66df5d6d8a9842c45da39361bb37fa33f1ccb",
+  "rows": 2000,
+  "horizontal_flip_tta": true,
+  "translation_tta": true
+}
