@@ -1,0 +1,24 @@
+extends: ../base.yaml
+experiment:
+  name: attention_resnet
+  output_dir: runs_attention
+model:
+  architecture: attention_resnet
+  blocks: [3, 3, 4]
+  channels: [64, 128, 224]
+  dropout: 0.05
+  se_reduction: 16
+  rotation_head: false
+data:
+  cache_images: true
+  num_workers: 0
+augmentation:
+  trivialaugment: true
+  cutout_size: 10
+training:
+  device: mps
+  epochs: 300
+  label_smoothing: 0.05
+  rotation_weight: 0.0
+optimizer:
+  exclude_norm_bias_decay: true

@@ -1,0 +1,9 @@
+{
+  "checkpoint": "submissions/attention_intermediate.pt",
+  "checkpoint_epoch": 156,
+  "validation_accuracy": 0.925,
+  "public_accuracy_reported": 0.811,
+  "public_score_source": "User-provided Kaggle screenshot",
+  "csv": "submissions/submission_attention_intermediate.csv",
+  "csv_sha256": "af184b5523cd82d02f65a74604939bf579561dcb36104e31f94dde6a93798c97"
+}

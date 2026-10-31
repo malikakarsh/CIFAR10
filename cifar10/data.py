@@ -67,16 +67,36 @@ def transform(config, training):
     d, a = config['data'], config['augmentation']
     ops = []
     if training:
+        if a.get('trivialaugment', False) and a.get('trivialaugment_first', False):
+            ops.append(T.TrivialAugmentWide())
         if a['crop_padding']:
             ops.append(T.RandomCrop(32, padding=a['crop_padding'], padding_mode='reflect'))
         if a['horizontal_flip']:
             ops.append(T.RandomHorizontalFlip())
         if a['randaugment_ops']:
             ops.append(T.RandAugment(a['randaugment_ops'], a['randaugment_magnitude']))
+        if a.get('trivialaugment', False) and not a.get('trivialaugment_first', False):
+            ops.append(T.TrivialAugmentWide())
     ops += [T.ToTensor(), T.Normalize(d['mean'], d['std'])]
     if training and a['random_erasing']:
         ops.append(T.RandomErasing(p=a['random_erasing']))
+    if training and a.get('cutout_size', 0):
+        ops.append(Cutout(a['cutout_size']))
     return T.Compose(ops)
+
+
+class Cutout:
+    def __init__(self, size):
+        self.size = size
+
+    def __call__(self, tensor):
+        height, width = tensor.shape[-2:]
+        y, x = torch.randint(height, (1,)).item(), torch.randint(width, (1,)).item()
+        top, left = y - self.size // 2, x - self.size // 2
+        result = tensor.clone()
+        result[:, max(0, top):min(height, top + self.size),
+               max(0, left):min(width, left + self.size)] = 0
+        return result
 
 
 class ImageDataset(Dataset):
@@ -92,15 +112,28 @@ class ImageDataset(Dataset):
             if not path.is_file():
                 raise FileNotFoundError(f"Missing image: {path}. Check filename_column/template and image directories.")
             self.paths.append(path)
+        self.cached_images = None
+        if d.get('cache_images', False):
+            self.cached_images = np.empty((len(rows), 32, 32, 3), dtype=np.uint8)
+            print(f'Decoding {len(rows):,} images into RAM once for this dataset...', flush=True)
+            for index, path in enumerate(self.paths):
+                self.cached_images[index] = np.asarray(self.read_image(index))
+                if (index + 1) % 5000 == 0 or index + 1 == len(rows):
+                    print(f'RAM cache: {index + 1:,}/{len(rows):,}', flush=True)
+
+    def read_image(self, index):
+        with Image.open(self.paths[index]) as image:
+            if image.size != (32, 32):
+                raise ValueError(f"Expected 32x32 image: {self.paths[index]} has size {image.size}")
+            return image.convert('RGB').copy()
 
     def __len__(self):
         return len(self.rows)
 
     def __getitem__(self, index):
-        with Image.open(self.paths[index]) as image:
-            if image.size != (32, 32):
-                raise ValueError(f"Expected 32x32 image: {self.paths[index]} has size {image.size}")
-            tensor = self.transform(image.convert('RGB'))
+        image = (Image.fromarray(self.cached_images[index]) if self.cached_images is not None
+                 else self.read_image(index))
+        tensor = self.transform(image)
         d = self.config['data']
         target = self.rows[index][d['id_column']] if self.test else int(self.rows[index][d['label_column']])
         return tensor, target

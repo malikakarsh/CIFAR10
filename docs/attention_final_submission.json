@@ -1,0 +1,13 @@
+{
+  "checkpoint": "runs_attention/attention_resnet_sweep000_20261031T025638Z_303819/best.pt",
+  "checkpoint_epoch": 300,
+  "validation_accuracy": 0.9714,
+  "training_loss": 0.46664113467534385,
+  "validation_loss": 0.13242033290863037,
+  "public_accuracy_reported": 0.878,
+  "public_score_source": "User-provided Kaggle screenshot; checkpoint command supplied immediately before score",
+  "csv": "submissions/submission_attention_final.csv",
+  "csv_sha256": "a82b0b7e88b6aa291e90ebb556d5a90d59ac6e18b4d03c11382bfc8d737afa99",
+  "rows": 2000,
+  "horizontal_flip_tta": false
+}

@@ -47,7 +47,20 @@ class ResNet(nn.Module):
 def build_model(config):
     options = dict(config)
     limit = min(options.pop('max_parameters'), 5_000_000)
-    model = ResNet(**options)
+    architecture = options.pop('architecture', 'resnet')
+    if architecture == 'preact_resnet':
+        from .sla import PreActResNet
+        model = PreActResNet(**options)
+    elif architecture == 'attention_resnet':
+        from .attention_resnet import AttentionResNet
+        model = AttentionResNet(**options)
+    elif architecture == 'resnet':
+        options.pop('se_reduction', None)
+        if options.pop('rotation_head', False):
+            raise ValueError('Rotation head requires attention_resnet')
+        model = ResNet(**options)
+    else:
+        raise ValueError(f'Unknown model architecture: {architecture}')
     count = sum(p.numel() for p in model.parameters() if p.requires_grad)
     if count > limit:
         raise ValueError(f"Model has {count:,} trainable parameters; limit is {limit:,}")

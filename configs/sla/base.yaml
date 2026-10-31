@@ -1,0 +1,33 @@
+extends: ../base.yaml
+experiment:
+  name: preact_control
+  output_dir: runs_sla
+model:
+  architecture: preact_resnet
+  blocks: [4, 4, 3]
+  channels: [64, 128, 256]
+  dropout: 0.0
+  sla_head: false
+data:
+  cache_images: true
+  num_workers: 0
+augmentation:
+  trivialaugment: true
+  trivialaugment_first: true
+  cutout_size: 12
+training:
+  device: mps
+  epochs: 300
+  batch_size: 128
+  label_smoothing: 0.1
+  sla: false
+optimizer:
+  exclude_norm_bias_decay: true
+scheduler:
+  min_lr: 0.0
+  per_step: true
+inference:
+  batch_size: 64
+  horizontal_flip_tta: true
+  translation_tta: true
+  rotation_vote: false

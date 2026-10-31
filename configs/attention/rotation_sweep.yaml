@@ -1,0 +1,3 @@
+base: rotation.yaml
+grid:
+  experiment.seed: [42]

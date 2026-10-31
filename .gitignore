@@ -6,12 +6,16 @@ __pycache__/
 .DS_Store
 data/
 dataset/
+dataset.zip
 runs/
 runs_hpc/
 logs/
 .venv-hpc/
 configs/generated/
 runs_next/
+runs_local300/
+runs_attention/
+runs_sla/
 submissions/
 best_sub/
 *.pt

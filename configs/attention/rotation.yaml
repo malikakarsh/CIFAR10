@@ -1,0 +1,7 @@
+extends: base.yaml
+experiment:
+  name: attention_resnet_rotation
+model:
+  rotation_head: true
+training:
+  rotation_weight: 0.25

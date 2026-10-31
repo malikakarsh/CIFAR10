@@ -1,0 +1,6 @@
+base: recipe.yaml
+overrides:
+  experiment.name: local300_mixup
+  augmentation.mixup_alpha: 0.2
+grid:
+  experiment.seed: [42]

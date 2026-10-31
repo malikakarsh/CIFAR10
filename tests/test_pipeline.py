@@ -1,4 +1,6 @@
 import csv
+from contextlib import redirect_stdout
+import io
 from pathlib import Path
 import tempfile
 import unittest
@@ -70,7 +72,13 @@ class PipelineTests(unittest.TestCase):
             a, b = split_rows(raw, config)
             self.assertEqual((a, b), split_rows(list(reversed(raw)), config))
             self.assertFalse({r['id'] for r in a} & {r['id'] for r in b})
-            result = train(config)
+            progress = io.StringIO()
+            with redirect_stdout(progress):
+                result = train(config)
+            self.assertIn('waiting for first batch', progress.getvalue())
+            self.assertIn('first batch loaded', progress.getvalue())
+            self.assertIn('train batch 1/2', progress.getvalue())
+            self.assertIn('validation batch 1/1', progress.getvalue())
             self.assertTrue(Path(result['best_checkpoint']).is_file())
             self.assertTrue(np.isfinite(result['best_metrics']['val_loss']))
             output = predict(result['best_checkpoint'], root / 'submission.csv', device_name='cpu', tta=True)

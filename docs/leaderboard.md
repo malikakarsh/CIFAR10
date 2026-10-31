@@ -4,7 +4,11 @@
 |---|---|---|---:|---|
 | 2026-10-29 | First ResNet; `resnet_baseline_sweep000_20261029T224315Z_18e3b7` | `best.pt`, confirmed by user | 79.50% | Not recorded at prediction time |
 | 2026-10-29 | First ResNet, submission reported after training completed | Completed-model submission; checkpoint provenance not independently verified | **84.00%** | Completed best.pt is epoch 194; no prediction-time manifest |
-| 2026-10-30 | Deeper + wider SGD; `resnet_baseline_sweep003_20261030T114542Z_9bc762` | Latest submission reported after best-model prediction instructions | **85.30%** | Saved best checkpoint is epoch 195; no prediction-time manifest |
+| 2026-10-30 | Deeper + wider SGD; `resnet_baseline_sweep003_20261030T114542Z_9bc762` | Latest submission reported after best-model prediction instructions | 85.30% | Saved best checkpoint is epoch 195; no prediction-time manifest |
+| 2026-10-30 | Attention ResNet control, intermediate | `submissions/attention_intermediate.pt` | 81.10% | 156; frozen checkpoint verified |
+| 2026-10-31 | Attention ResNet control, completed; `attention_resnet_sweep000_20261031T025638Z_303819` | `best.pt`, prediction command supplied before reported score | **87.80%** | 300; checkpoint verified |
+
+The latest screenshot reports **87.80%**, an improvement of **2.50 percentage points** over 85.30%. The completed attention model achieved **97.14% validation accuracy**, with **0.4666 training loss** and **0.1324 validation loss** at epoch 300.
 
 The third screenshot reports **85.30%**, improving on 84.00% by **1.30 percentage points**. The matching local run has 95.82% best validation accuracy.
 

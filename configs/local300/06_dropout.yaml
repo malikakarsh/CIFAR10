@@ -1,0 +1,6 @@
+base: recipe.yaml
+overrides:
+  experiment.name: local300_dropout
+  model.dropout: 0.1
+grid:
+  experiment.seed: [42]

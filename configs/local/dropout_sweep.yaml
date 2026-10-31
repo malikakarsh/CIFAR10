@@ -1,0 +1,3 @@
+base: dropout.yaml
+grid:
+  experiment.seed: [42]

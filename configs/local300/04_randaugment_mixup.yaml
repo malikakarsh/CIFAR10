@@ -1,0 +1,8 @@
+base: recipe.yaml
+overrides:
+  experiment.name: local300_randaugment_mixup
+  augmentation.randaugment_ops: 2
+  augmentation.randaugment_magnitude: 7
+  augmentation.mixup_alpha: 0.2
+grid:
+  experiment.seed: [42]

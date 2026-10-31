@@ -1,0 +1,5 @@
+base: recipe.yaml
+overrides:
+  experiment.name: local300_control
+grid:
+  experiment.seed: [42]

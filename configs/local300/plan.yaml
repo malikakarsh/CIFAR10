@@ -1,0 +1,13 @@
+# All ten experiments execute sequentially, with no manual selection between runs.
+sweeps:
+  - 01_control.yaml
+  - 02_randaugment.yaml
+  - 03_mixup.yaml
+  - 04_randaugment_mixup.yaml
+  - 05_erasing.yaml
+  - 06_dropout.yaml
+  - 07_smoothing.yaml
+  - 08_combined.yaml
+  - 09_large_control.yaml
+  - 10_large_combined.yaml
+interleave: false

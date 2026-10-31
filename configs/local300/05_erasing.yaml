@@ -1,0 +1,6 @@
+base: recipe.yaml
+overrides:
+  experiment.name: local300_erasing
+  augmentation.random_erasing: 0.25
+grid:
+  experiment.seed: [42]

@@ -1,0 +1,5 @@
+extends: recipe.yaml
+experiment:
+  name: local_wide_sgd_smoothing
+training:
+  label_smoothing: 0.05

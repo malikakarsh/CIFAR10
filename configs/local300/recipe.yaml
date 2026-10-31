@@ -1,0 +1,13 @@
+# Fixed local-only protocol for the unattended 300-epoch experiment queue.
+extends: ../base.yaml
+experiment:
+  name: local300
+  output_dir: runs_local300
+model:
+  blocks: [3, 3, 3]
+  channels: [48, 96, 192]
+training:
+  device: mps
+  epochs: 300
+data:
+  num_workers: 0

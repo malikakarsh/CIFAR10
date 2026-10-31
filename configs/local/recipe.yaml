@@ -1,0 +1,12 @@
+# Complements the Kaggle RandAugment/mixup trials on the existing Mac protocol.
+extends: ../base.yaml
+experiment:
+  name: local_wide_sgd
+  output_dir: runs_next
+model:
+  blocks: [3, 3, 3]
+  channels: [48, 96, 192]
+training:
+  device: mps
+data:
+  num_workers: 0

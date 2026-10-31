@@ -1,5 +1,9 @@
 # Next experiment plan
 
+**Superseded as the current execution plan:** use [the local sequential 300-epoch queue](local300_plan.md). All ten trials run automatically. The instructions below are retained as optional staged/earlier workflows.
+
+**Current execution choice: all stages on the local Mac/MPS.** Kaggle has been stopped. Start with `configs/local/priority_plan.yaml` and the completed local wider-SGD control, then review results before adding trials. Use the source configs under `runs_next/` for later `prepare-stage` commands; the generator preserves their MPS device, local paths, and worker settings. The CUDA/Burst examples below are optional alternatives, not the current execution target.
+
 ## Objective and starting point
 
 Improve generalization under the 5,000,000-parameter constraint. Current best results are **95.82% validation accuracy** and **85.30% reported public Kaggle accuracy**. A 90% public score is a target, not a predicted outcome.

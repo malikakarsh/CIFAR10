@@ -1,0 +1,6 @@
+# Three separate changes to the completed local wider-SGD control.
+sweeps:
+  - erasing_sweep.yaml
+  - dropout_sweep.yaml
+  - smoothing_sweep.yaml
+interleave: false

@@ -1,0 +1,5 @@
+extends: recipe.yaml
+experiment:
+  name: local_wide_sgd_dropout
+model:
+  dropout: 0.1

@@ -1,0 +1,6 @@
+base: recipe.yaml
+overrides:
+  experiment.name: local300_smoothing
+  training.label_smoothing: 0.05
+grid:
+  experiment.seed: [42]

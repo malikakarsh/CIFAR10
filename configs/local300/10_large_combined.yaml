@@ -1,0 +1,6 @@
+base: combined.yaml
+overrides:
+  experiment.name: local300_large_combined
+  model.blocks: [5, 5, 5]
+grid:
+  experiment.seed: [42]

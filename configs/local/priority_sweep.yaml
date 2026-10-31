@@ -1,0 +1,8 @@
+# Local-only next step: one RandAugment trial against the completed Mac control.
+base: ../generalization.yaml
+overrides:
+  training.device: mps
+  data.num_workers: 0
+  experiment.output_dir: runs_next
+grid:
+  experiment.seed: [42]

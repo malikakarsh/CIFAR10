@@ -1,0 +1,4 @@
+sweeps:
+  - control_sweep.yaml
+  - distillation_sweep.yaml
+interleave: false

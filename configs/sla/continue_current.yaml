@@ -1,0 +1,7 @@
+# Finish/resume the existing attention control, then train the new comparison.
+# Keep its original sweep unchanged so checkpoint/config matching is exact.
+sweeps:
+  - ../attention/control_sweep.yaml
+  - control_sweep.yaml
+  - distillation_sweep.yaml
+interleave: false

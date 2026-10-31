@@ -77,16 +77,38 @@ def epoch_lr(config, epoch):
     return s['min_lr'] + (base - s['min_lr']) * (1 + math.cos(math.pi * progress)) / 2
 
 
+def optimizer_parameters(model, config):
+    if not config.get('exclude_norm_bias_decay', False):
+        return model.parameters()
+    decayed, exempt = [], []
+    for parameter in model.parameters():
+        if parameter.requires_grad:
+            (decayed if parameter.ndim > 1 else exempt).append(parameter)
+    return [{'params': decayed, 'weight_decay': config['weight_decay']},
+            {'params': exempt, 'weight_decay': 0.}]
+
+
+def rotation_batch(images, targets):
+    """One random quarter-turn per image; labels identify the chosen transform."""
+    rotated = torch.zeros_like(images)
+    for turn in range(4):
+        mask = (targets == turn).view(-1, 1, 1, 1)
+        rotated = torch.where(mask, images.rot90(turn, (-2, -1)), rotated)
+    return rotated
+
+
 @torch.inference_mode()
-def evaluate(model, batches, device):
+def evaluate(model, batches, device, progress_label=None):
     model.eval()
     loss_sum = correct = count = 0
-    for images, labels in batches:
+    for batch_index, (images, labels) in enumerate(batches, 1):
         images, labels = images.to(device), labels.to(device)
         logits = model(images)
         loss_sum += nn.functional.cross_entropy(logits, labels, reduction='sum').item()
         correct += (logits.argmax(1) == labels).sum().item()
         count += labels.size(0)
+        if progress_label and (batch_index == 1 or batch_index % 10 == 0 or batch_index == len(batches)):
+            print(f'{progress_label}: validation batch {batch_index}/{len(batches)}', flush=True)
     return {'loss': loss_sum / count, 'accuracy': correct / count}
 
 
@@ -109,11 +131,12 @@ def train(config, resume=None):
     train_loader = loader(ImageDataset(tr, config, training=True), config, True, generator)
     val_loader = loader(ImageDataset(va, config), config) if va else None
     opt = config['optimizer']
+    parameter_groups = optimizer_parameters(model, opt)
     if opt['name'] == 'sgd':
-        optimizer = torch.optim.SGD(model.parameters(), lr=opt['lr'], momentum=opt['momentum'],
+        optimizer = torch.optim.SGD(parameter_groups, lr=opt['lr'], momentum=opt['momentum'],
                                     nesterov=opt['nesterov'], weight_decay=opt['weight_decay'])
     else:
-        optimizer = torch.optim.AdamW(model.parameters(), lr=opt['lr'], weight_decay=opt['weight_decay'])
+        optimizer = torch.optim.AdamW(parameter_groups, lr=opt['lr'], weight_decay=opt['weight_decay'])
     amp = config['training']['amp'] and device.type == 'cuda'
     scaler = torch.amp.GradScaler('cuda', enabled=amp)
     criterion = nn.CrossEntropyLoss(label_smoothing=config['training']['label_smoothing'])
@@ -149,7 +172,31 @@ def train(config, resume=None):
             group['lr'] = lr
         model.train()
         total_loss = correct = samples = 0
-        for images, labels in train_loader:
+        rotation_loss_sum = 0.
+        rotation_weight = config['training'].get('rotation_weight', 0.)
+        use_sla = config['training'].get('sla', False)
+        sla_sums = dict.fromkeys(('joint', 'distillation', 'classification'), 0.)
+        label = f'Epoch {epoch + 1}/{config["training"]["epochs"]}'
+        print(f'{label}: starting training; workers={config["data"]["num_workers"]}; '
+              f'waiting for first batch ({len(train_loader)} batches total)', flush=True)
+        for batch_index, (images, labels) in enumerate(train_loader, 1):
+            if config['scheduler'].get('per_step', False):
+                step = epoch * len(train_loader) + batch_index - 1
+                warmup = config['scheduler']['warmup_epochs'] * len(train_loader)
+                steps = config['training']['epochs'] * len(train_loader)
+                peak = config['optimizer']['lr']
+                floor = config['scheduler']['min_lr']
+                if step < warmup:
+                    lr = peak * (step + 1) / warmup
+                elif config['scheduler']['name'] == 'constant':
+                    lr = peak
+                else:
+                    progress = (step - warmup) / max(1, steps - warmup - 1)
+                    lr = floor + (peak - floor) * (1 + math.cos(math.pi * progress)) / 2
+                for group in optimizer.param_groups:
+                    group['lr'] = lr
+            if batch_index == 1:
+                print(f'{label}: first batch loaded; starting forward/backward', flush=True)
             images, labels = images.to(device), labels.to(device)
             alpha = config['augmentation']['mixup_alpha']
             lam = float(np.random.beta(alpha, alpha)) if alpha > 0 else 1.0
@@ -157,8 +204,18 @@ def train(config, resume=None):
             mixed = lam * images + (1 - lam) * images[order] if alpha > 0 else images
             optimizer.zero_grad(set_to_none=True)
             with torch.autocast(device_type=device.type, enabled=amp):
-                logits = model(mixed)
-                loss = lam * criterion(logits, labels) + (1 - lam) * criterion(logits, labels[order])
+                if use_sla:
+                    from .sla import training_loss
+                    loss, logits, sla_parts = training_loss(
+                        model, images, labels, config['training']['label_smoothing'])
+                else:
+                    logits = model(mixed)
+                    loss = lam * criterion(logits, labels) + (1 - lam) * criterion(logits, labels[order])
+                if rotation_weight > 0:
+                    rotation_targets = torch.randint(4, (images.size(0),), device=device)
+                    rotation_logits = model.predict_rotation(rotation_batch(images, rotation_targets))
+                    rotation_loss = nn.functional.cross_entropy(rotation_logits, rotation_targets)
+                    loss = loss + rotation_weight * rotation_loss
             if not torch.isfinite(loss):
                 raise RuntimeError(f"Nonfinite loss at epoch {epoch + 1}")
             scaler.scale(loss).backward()
@@ -168,10 +225,20 @@ def train(config, resume=None):
             scaler.step(optimizer)
             scaler.update()
             total_loss += loss.item() * labels.size(0)
+            if use_sla:
+                for key, value in sla_parts.items():
+                    sla_sums[key] += value.item() * labels.size(0)
+            if rotation_weight > 0:
+                rotation_loss_sum += rotation_loss.item() * labels.size(0)
             predicted = logits.argmax(1)
             correct += lam * (predicted == labels).sum().item() + (1 - lam) * (predicted == labels[order]).sum().item()
             samples += labels.size(0)
-        validation = evaluate(model, val_loader, device) if val_loader else None
+            if batch_index == 1 or batch_index % 50 == 0 or batch_index == len(train_loader):
+                print(f'{label}: train batch {batch_index}/{len(train_loader)}; '
+                      f'loss={total_loss / samples:.4f}; elapsed={time.monotonic() - begin:.1f}s', flush=True)
+        if val_loader:
+            print(f'{label}: training complete; starting validation', flush=True)
+        validation = evaluate(model, val_loader, device, progress_label=label) if val_loader else None
         improved = validation is not None and validation['accuracy'] > best
         if improved:
             best = validation['accuracy']
@@ -181,6 +248,10 @@ def train(config, resume=None):
                    'val_loss': validation['loss'] if validation else None,
                    'val_accuracy': validation['accuracy'] if validation else None,
                    'seconds': time.monotonic() - begin}
+        if rotation_weight > 0:
+            metrics['train_rotation_loss'] = rotation_loss_sum / samples
+        if use_sla:
+            metrics.update({f'train_{key}_loss': value / samples for key, value in sla_sums.items()})
         if improved:
             best_metrics = metrics
         with (run / 'metrics.csv').open('a', newline='') as f:
@@ -223,12 +294,18 @@ def predict(checkpoint_path, output, data_root=None, device_name='auto', tta=Non
     device = device_for(device_name)
     model.to(device).eval()
     use_tta = config['inference']['horizontal_flip_tta'] if tta is None else tta
+    from .sla import probabilities as model_probabilities, inference_probabilities
+    rotation_vote = config['inference'].get('rotation_vote', False)
     predictions = {}
     for images, ids in loader(ImageDataset(rows, config, test=True), config):
         images = images.to(device)
-        probabilities = model(images).softmax(1)
-        if use_tta:
-            probabilities = (probabilities + model(images.flip(-1)).softmax(1)) / 2
+        if config['model'].get('architecture') == 'preact_resnet':
+            probabilities = inference_probabilities(model, images, use_tta,
+                use_tta and config['inference'].get('translation_tta', False), rotation_vote)
+        else:
+            probabilities = model_probabilities(model, images, rotation_vote)
+            if use_tta:
+                probabilities = (probabilities + model_probabilities(model, images.flip(-1), rotation_vote)) / 2
         predictions.update(zip(ids, probabilities.argmax(1).cpu().tolist()))
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)

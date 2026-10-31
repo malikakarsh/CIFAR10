@@ -1,0 +1,9 @@
+extends: base.yaml
+experiment:
+  name: preact_sla_sd
+model:
+  sla_head: true
+training:
+  sla: true
+inference:
+  rotation_vote: true

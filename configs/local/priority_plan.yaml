@@ -1,0 +1,3 @@
+sweeps:
+  - priority_sweep.yaml
+interleave: false

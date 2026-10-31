@@ -1,0 +1,6 @@
+base: recipe.yaml
+overrides:
+  experiment.name: local300_large_control
+  model.blocks: [5, 5, 5]
+grid:
+  experiment.seed: [42]

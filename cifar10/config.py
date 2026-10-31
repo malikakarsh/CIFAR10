@@ -3,13 +3,26 @@ from pathlib import Path
 import yaml
 
 
-def merge(base, updates):
+# Optional extensions are accepted in inherited files without adding keys to old
+# resolved configs. Existing checkpoint/config equality therefore stays intact.
+OPTIONAL = {
+    'model': {'architecture', 'se_reduction', 'rotation_head', 'sla_head'},
+    'data': {'cache_images'},
+    'augmentation': {'trivialaugment', 'cutout_size', 'trivialaugment_first'},
+    'training': {'rotation_weight', 'sla'},
+    'inference': {'rotation_vote', 'translation_tta'},
+    'scheduler': {'per_step'},
+    'optimizer': {'exclude_norm_bias_decay'},
+}
+
+
+def merge(base, updates, section=None):
     result = deepcopy(base)
     for key, value in updates.items():
-        if key not in result:
+        if key not in result and key not in OPTIONAL.get(section, set()):
             raise ValueError(f"Unknown config key: {key}")
-        if isinstance(result[key], dict) and isinstance(value, dict):
-            result[key] = merge(result[key], value)
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = merge(result[key], value, section=key)
         else:
             result[key] = deepcopy(value)
     return result
@@ -22,7 +35,7 @@ def set_value(config, key, value):
         if part not in node or not isinstance(node[part], dict):
             raise ValueError(f"Unknown config key: {key}")
         node = node[part]
-    if parts[-1] not in node:
+    if parts[-1] not in node and parts[-1] not in OPTIONAL.get(parts[0] if len(parts) == 2 else None, set()):
         raise ValueError(f"Unknown config key: {key}")
     node[parts[-1]] = value
 
@@ -75,6 +88,27 @@ def validate(c):
         raise ValueError("min_lr must be between 0 and optimizer.lr")
     if a['mixup_alpha'] < 0 or not 0 <= a['random_erasing'] <= 1:
         raise ValueError("Invalid mixup_alpha or random_erasing")
+    if m.get('architecture', 'resnet') not in ('resnet', 'attention_resnet', 'preact_resnet'):
+        raise ValueError('Unknown architecture')
+    if type(m.get('se_reduction', 16)) is not int or m.get('se_reduction', 16) < 1:
+        raise ValueError('se_reduction must be a positive integer')
+    if type(a.get('cutout_size', 0)) is not int or not 0 <= a.get('cutout_size', 0) <= 32:
+        raise ValueError('cutout_size must be in [0, 32]')
+    if a.get('trivialaugment', False) and a['randaugment_ops']:
+        raise ValueError('Select either TrivialAugment or RandAugment')
+    weight = t.get('rotation_weight', 0.)
+    if weight < 0 or (weight > 0 and not (m.get('rotation_head') and m.get('architecture') == 'attention_resnet')):
+        raise ValueError('Positive rotation_weight requires an attention_resnet rotation head')
+    if weight > 0 and a['mixup_alpha']:
+        raise ValueError('Disable mixup for the auxiliary rotation comparison')
+    if m.get('sla_head', False) and m.get('architecture') != 'preact_resnet':
+        raise ValueError('SLA head requires preact_resnet')
+    if bool(t.get('sla', False)) != bool(m.get('sla_head', False)):
+        raise ValueError('Enable training.sla and model.sla_head together')
+    if t.get('sla', False) and (a['mixup_alpha'] or weight or m.get('rotation_head', False)):
+        raise ValueError('SLA requires unmixed labels and no auxiliary rotation task')
+    if c['inference'].get('rotation_vote', False) and not m.get('sla_head', False):
+        raise ValueError('Rotation voting requires an SLA head')
 
 
 def save_config(config, path):
