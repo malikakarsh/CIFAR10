@@ -34,8 +34,21 @@
     }
   ],
   "full_data_control": {
-    "epochs_completed_reported": 493,
-    "validation_available": false
+    "epochs_completed": 600,
+    "validation_available": false,
+    "final_metrics": {
+      "epoch": 600,
+      "lr": 0.0,
+      "train_loss": 0.6407927679634094,
+      "train_accuracy_mixup_weighted": 0.93832,
+      "val_loss": null,
+      "val_accuracy": null,
+      "seconds": 13.50845347699942
+    },
+    "public_accuracy_reported": 0.887,
+    "local_summary": "runs_hpc/a100_experiments/a100_control600_full50k_sweep000_20261101T045227Z_78f02c/summary.json",
+    "csv_and_summary_verified": true,
+    "checkpoint_weights_included": false
   },
   "public_scores": {
     "a100_sam005_sweep000": 0.896,

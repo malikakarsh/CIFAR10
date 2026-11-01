@@ -1,6 +1,8 @@
 extends: ../hpc_a100/sam.yaml
 experiment:
-  name: finalist_sam005_full50k
+  name: finalist_sam005_800_full50k
   output_dir: runs_hpc/a100_finalists
 data:
   val_fraction: 0.0
+training:
+  epochs: 800

@@ -23,8 +23,9 @@ Configurable PyTorch experiments for CIFAR-10 classification under a **5-million
 | Pre-activation A100 control | SGD | 4,696,394 | 600/600 | 575 | — | 0.1725 | 97.38% |
 | Pre-activation A100 + SAM | SGD + SAM | 4,696,394 | 600/600 | 575 | 0.6565 | 0.1617 | 97.78% |
 | Pre-activation A100 + SLA+SD | SGD | 4,706,674 | 600/600 | 588 | 1.0618 | **0.1096** | **97.86%** |
+| Pre-activation control, full 50k | SGD | 4,696,394 | 600/600 | — | 0.6408 | N/A | N/A |
 
-Losses and accuracy are reported at each run's highest-validation-accuracy epoch. Thirteen runs are reported complete; the larger AdamW trial has 143/200 epochs saved and remains incomplete. Validation runs are configured with the same stratified 45,000/5,000 split. SAM and SLA+SD results are verified against downloaded checkpoints, configs, metric histories, and submission CSV hashes. The A100 SGD-control row is from a user-pasted summary; its training loss and full export remain pending. Training loss uses augmented images and the configured label smoothing; validation loss is ordinary cross-entropy on unaugmented images. SLA training loss sums ordinary classification, joint class/rotation classification, and distillation losses; its total is not directly comparable with SAM or ordinary classification loss.
+Losses and accuracy are reported at each run's highest-validation-accuracy epoch. Fourteen runs are reported complete; the larger AdamW trial has 143/200 epochs saved and remains incomplete. Validation runs are configured with the same stratified 45,000/5,000 split. SAM and SLA+SD results are verified against downloaded checkpoints, configs, metric histories, and submission CSV hashes. The A100 SGD-control row is from a user-pasted summary; its training loss and full export remain pending. Training loss uses augmented images and the configured label smoothing; validation loss is ordinary cross-entropy on unaugmented images. The full-50k row uses final-epoch training loss verified from its imported summary and has no validation split. SLA training loss sums ordinary classification, joint class/rotation classification, and distillation losses; its total is not directly comparable with SAM or ordinary classification loss.
 <!-- RESULTS:END -->
 
 | Public Kaggle submission | Accuracy |
@@ -38,8 +39,11 @@ Losses and accuracy are reported at each run's highest-validation-accuracy epoch
 | Attention600, best epoch 583, mirror/translation TTA | 88.80% |
 | SAM600, best epoch 575, mirror/translation TTA | 89.60% |
 | SLA+SD600, best epoch 588, mirror/translation TTA and joint-head vote | **90.10%** |
+| Plain control600, full 50k, final checkpoint with TTA | 88.70% |
 
 Public scores are reported from leaderboard screenshots. Hidden evaluation labels are unavailable; evaluation loss and private accuracy cannot be calculated. Details: [submission history](docs/leaderboard.md).
+
+The full-50k plain control scored **88.70%** publicly, versus 88.80% for the earlier 400-epoch plain control and 90.10% for SLA+SD600. This is no measured improvement; epoch budget, data split and execution platform differ from the earlier plain run, so the small decline cannot be attributed solely to data size. Its CSV, inference metadata, final summary, and reconstructed 50k/zero-validation split fingerprint are verified locally. This export contains no checkpoint weights or per-epoch history. No full-data SLA or SAM result is implied.
 
 The A100 comparison shows **SAM at 97.78% validation accuracy**, up 0.40 percentage points from its matched float32 SGD control (97.38%). **SLA+SD600 reaches 97.86% accuracy and 0.1096 loss**, the strongest verified validation result so far. Its accuracy advantage over SAM is only four validation images; SLA uses CUDA AMP while SAM/control use float32. Their reported public scores are **89.60% for SAM** and **90.10% for SLA+SD**, making SLA+SD the current public best. [HPC result records](docs/a100_reported_results.json).
 
@@ -156,11 +160,20 @@ nohup python -u scripts/queue_a100.py --project "$PWD" \
 On HPC, first upload/extract the small code update and activate the existing environment as described in the [A100 queue guide](docs/a100_queue.md). The launcher waits for the current attention run without stopping it, resumes saved trials, and skips completed matching trials. New results go to `runs_hpc/a100_experiments/`. SAM and its control use float32; SLA uses CUDA AMP. The initial attention600 result is recorded above. SAM and SLA exports are imported and verified; the matched SGD-control export remains pending. Reported public scores are 89.60% for SAM and 90.10% for SLA+SD.
 
 
-## Selected methods: full-data training and second seeds
+## Next experiment: 800 epochs with validation
 
-SLA+SD600 now has the best reported public score (**90.10%**), followed by SAM600 (**89.60%**). A separate follow-up plan preserves their measured settings and schedules **600 epochs each** for SLA full-50k, SAM full-50k, then a seed-43 validation repeat of each method. Both architectures remain below 5 million parameters. Full-data trials intentionally report no validation metrics and use `last.pt`.
+The active follow-up decision is **SLA+SD800 followed by SAM800**, trained from scratch on **49,000 labeled training images with a fixed stratified 1,000-image validation set** (`val_fraction=0.02`, split seed 42). Architecture, optimizer, augmentation, batch size, and precision remain those of the measured methods. Cosine decay spans all 800 epochs; validation selects `best.pt`. The 1k split provides monitoring but less precise accuracy estimates than the earlier 5k split, so scores from the two splits are not directly comparable.
 
-The [follow-up guide](docs/a100_finalists.md) includes the small update upload and waiting-launcher commands. `scripts/queue_finalists.py` waits for the current A100 queue to end, then runs the new plan into `runs_hpc/a100_finalists/`. It is prepared locally and must be uploaded and launched on HPC; editing local configs alone does not activate it. No new full-data or repeat-seed results are claimed yet, and the backlog may require a later allocation.
+`scripts/run_800_val1k.py` creates the resolved configs under Git-ignored `configs/generated/a100_800_val1k/`, waits for already-running queues, and then runs both methods sequentially. Outputs go to `runs_hpc/a100_800_val1k/`. On HPC, after the script has been copied/created there and the existing environment is active:
+
+```bash
+nohup python -u scripts/run_800_val1k.py \
+  > runs_hpc/800_val1k_queue.log 2>&1 &
+```
+
+Run only one waiting launcher for this plan. It does not preempt earlier queues, and activation on HPC must be verified from its log; changing this local repository does not start it remotely. There are no measured results for these 800-epoch validation runs yet.
+
+The earlier [full-data finalist plan](docs/a100_finalists.md) remains available as a separate alternative. It uses all 50,000 images, has no validation, and should not be launched alongside the new validation plan. Second-seed repeats remain at 600 epochs. Existing completed checkpoints are retained.
 
 ## Configuration and checkpoints
 

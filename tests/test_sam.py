@@ -129,8 +129,11 @@ class SAMTests(unittest.TestCase):
             actual['experiment'] = expected['experiment']
             if full_data:
                 self.assertEqual(actual['data']['val_fraction'], 0.)
+                self.assertEqual(actual['training']['epochs'], 800)
                 actual['data']['val_fraction'] = expected['data']['val_fraction']
+                actual['training']['epochs'] = expected['training']['epochs']
             else:
+                self.assertEqual(actual['training']['epochs'], 600)
                 self.assertEqual(config['experiment']['seed'], 43)
                 self.assertEqual(config['data']['split_seed'], 42)
             self.assertEqual(actual, expected)
