@@ -1,0 +1,4 @@
+# The earlier standalone SAM800 trial is intentionally not in this queue.
+sweeps:
+  - sla_sam_sweep.yaml
+interleave: false

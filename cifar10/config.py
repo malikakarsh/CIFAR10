@@ -12,7 +12,7 @@ OPTIONAL = {
     'augmentation': {'trivialaugment', 'cutout_size', 'trivialaugment_first'},
     'training': {'rotation_weight', 'sla'},
     'inference': {'rotation_vote', 'translation_tta'},
-    'scheduler': {'per_step'},
+    'scheduler': {'per_step', 'restart_epoch'},
     'optimizer': {'exclude_norm_bias_decay', 'sam_rho'},
 }
 
@@ -83,7 +83,10 @@ def validate(c):
         raise ValueError("Use sgd or adamw with positive learning rate")
     if c['scheduler']['name'] not in ('cosine', 'constant'):
         raise ValueError("scheduler.name must be cosine or constant")
-    if not 0 <= c['scheduler']['warmup_epochs'] < t['epochs']:
+    restart = c['scheduler'].get('restart_epoch', 0)
+    if type(restart) is not int or not 0 <= restart < t['epochs']:
+        raise ValueError('restart_epoch must be an integer in [0, epochs)')
+    if not 0 <= c['scheduler']['warmup_epochs'] < t['epochs'] - restart:
         raise ValueError("warmup_epochs must be >= 0 and < epochs")
     if not 0 <= c['scheduler']['min_lr'] <= c['optimizer']['lr']:
         raise ValueError("min_lr must be between 0 and optimizer.lr")
@@ -113,8 +116,8 @@ def validate(c):
     rho = c['optimizer'].get('sam_rho', 0.)
     if not isinstance(rho, (float, int)) or not math.isfinite(rho) or rho < 0:
         raise ValueError('sam_rho must be finite and nonnegative')
-    if rho > 0 and (c['optimizer']['name'] != 'sgd' or t['amp'] or t.get('sla', False) or weight):
-        raise ValueError('SAM currently requires SGD, training.amp=false, and no auxiliary/SLA objective')
+    if rho > 0 and (c['optimizer']['name'] != 'sgd' or t['amp'] or weight):
+        raise ValueError('SAM currently requires SGD, training.amp=false, and no auxiliary rotation objective')
 
 
 def save_config(config, path):

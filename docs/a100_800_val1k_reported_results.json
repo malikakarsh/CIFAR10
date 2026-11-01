@@ -1,0 +1,63 @@
+{
+  "source": "User-pasted HPC summaries after the 20-hour allocation ended, 2026-11-01; checkpoint exports not yet imported",
+  "training_images_configured": 49000,
+  "validation_images_configured": 1000,
+  "sla800": {
+    "name": "sla800_49k_val1k_sweep000",
+    "parameters": 4706674,
+    "epochs_completed": 800,
+    "best_metrics": {
+      "epoch": 704,
+      "lr": 0.0035549708187568143,
+      "train_loss": 1.2019917362758092,
+      "train_accuracy_mixup_weighted": 0.9346734693877551,
+      "val_loss": 0.08816006183624267,
+      "val_accuracy": 0.987,
+      "seconds": 21.17422750499827,
+      "train_joint_loss": 0.47303384497700907,
+      "train_distillation_loss": 0.06120929404302519,
+      "train_classification_loss": 0.6677485984490842
+    },
+    "final_metrics": {
+      "epoch": 800,
+      "lr": 0.0,
+      "train_loss": 1.046847685113245,
+      "train_accuracy_mixup_weighted": 0.9541428571428572,
+      "val_loss": 0.09523531222343445,
+      "val_accuracy": 0.985,
+      "seconds": 21.30669035599567
+    },
+    "split_sha256": "a45dd36a642481c492117a8b3a8671c244ad66005b1ebc572ec2f2ced7bf4eb9",
+    "best_checkpoint_source": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/a100_800_val1k/sla800_49k_val1k_sweep000_20261101T072329Z_706456/best.pt"
+  },
+  "sam800_interrupted": {
+    "name": "sam800_49k_val1k_sweep000",
+    "parameters": 4696394,
+    "epochs_completed": 264,
+    "best_metrics": {
+      "epoch": 254,
+      "lr": 0.07768632756174237,
+      "train_loss": 0.9351136941520535,
+      "train_accuracy_mixup_weighted": 0.8103469387755102,
+      "val_loss": 0.26265391159057616,
+      "val_accuracy": 0.938,
+      "seconds": 20.42366296199907
+    },
+    "final_metrics": {
+      "epoch": 264,
+      "lr": 0.0760198529039426,
+      "train_loss": 0.929673229314843,
+      "train_accuracy_mixup_weighted": 0.8133061224489796,
+      "val_loss": 0.3180922107696533,
+      "val_accuracy": 0.924,
+      "seconds": 21.084399646992097
+    },
+    "split_sha256": "a45dd36a642481c492117a8b3a8671c244ad66005b1ebc572ec2f2ced7bf4eb9",
+    "last_checkpoint_source": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/a100_800_val1k/sam800_49k_val1k_sweep000_20261101T121129Z_21f80e/last.pt"
+  },
+  "public_submission_scores": {
+    "sla800": 0.896,
+    "sam800": "Not submitted; incomplete"
+  },
+  "sla800_artifact_verification": "Local checkpoint epoch/config and submission hash verified; common-holdout inference audit completed"
+}

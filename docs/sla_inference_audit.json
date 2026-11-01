@@ -1,0 +1,82 @@
+{
+  "validation_images": 1000,
+  "common_ids_sha256": "16d4ec40c4ad8c087d54d49f6f102336911b288e45cb2d7779ed37d5b57b37ad",
+  "training_overlap": false,
+  "device": "cpu",
+  "checkpoints": [
+    {
+      "checkpoint": "runs_hpc/a100_experiments/a100_sla600_sweep000_20261101T013008Z_62b447/best.pt",
+      "epoch": 588,
+      "parameters": 4706674,
+      "policies": {
+        "head_only": {
+          "correct": 985,
+          "accuracy": 0.985,
+          "loss": 0.08732159924507141
+        },
+        "head_mirror": {
+          "correct": 983,
+          "accuracy": 0.983,
+          "loss": 0.08404677307605743
+        },
+        "head_mirror_translation": {
+          "correct": 983,
+          "accuracy": 0.983,
+          "loss": 0.08222855305671692
+        },
+        "joint_mirror_translation": {
+          "correct": 989,
+          "accuracy": 0.989,
+          "loss": 0.029082210114225744
+        },
+        "combined_mirror": {
+          "correct": 989,
+          "accuracy": 0.989,
+          "loss": 0.05564264446496964
+        },
+        "combined_mirror_translation": {
+          "correct": 988,
+          "accuracy": 0.988,
+          "loss": 0.05430662840604782
+        }
+      }
+    },
+    {
+      "checkpoint": "runs_hpc/a100_800_val1k/sla800_49k_val1k_sweep000_20261101T072329Z_706456/best.pt",
+      "epoch": 704,
+      "parameters": 4706674,
+      "policies": {
+        "head_only": {
+          "correct": 987,
+          "accuracy": 0.987,
+          "loss": 0.08815814900398254
+        },
+        "head_mirror": {
+          "correct": 986,
+          "accuracy": 0.986,
+          "loss": 0.08661535930633545
+        },
+        "head_mirror_translation": {
+          "correct": 986,
+          "accuracy": 0.986,
+          "loss": 0.08606747090816498
+        },
+        "joint_mirror_translation": {
+          "correct": 986,
+          "accuracy": 0.986,
+          "loss": 0.03423015555180609
+        },
+        "combined_mirror": {
+          "correct": 985,
+          "accuracy": 0.985,
+          "loss": 0.05851055151224136
+        },
+        "combined_mirror_translation": {
+          "correct": 985,
+          "accuracy": 0.985,
+          "loss": 0.05800595235824585
+        }
+      }
+    }
+  ]
+}

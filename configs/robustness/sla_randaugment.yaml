@@ -1,0 +1,9 @@
+# Controlled augmentation change from the proven AMP SLA600 recipe.
+extends: ../hpc_a100/sla600.yaml
+experiment:
+  name: sla_randaugment600
+  output_dir: runs_hpc/sla_randaugment
+augmentation:
+  trivialaugment: false
+  randaugment_ops: 2
+  randaugment_magnitude: 5

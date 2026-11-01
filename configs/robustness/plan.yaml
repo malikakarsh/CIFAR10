@@ -1,0 +1,4 @@
+sweeps:
+  - sla_fp32_sweep.yaml
+  - sla_sam_sweep.yaml
+interleave: false

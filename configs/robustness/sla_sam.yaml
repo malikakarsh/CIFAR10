@@ -1,0 +1,8 @@
+extends: sla_fp32.yaml
+experiment:
+  name: sla_sam005_600
+  output_dir: runs_hpc/robustness
+training:
+  amp: false
+optimizer:
+  sam_rho: 0.05

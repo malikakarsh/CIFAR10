@@ -1,0 +1,6 @@
+extends: ../hpc_a100/sla600.yaml
+experiment:
+  name: sla_fp32_control600
+  output_dir: runs_hpc/robustness
+training:
+  amp: false

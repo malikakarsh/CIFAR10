@@ -1,0 +1,30 @@
+{
+  "checkpoint": "runs_hpc/a100_800_val1k/sla800_49k_val1k_sweep000_20261101T072329Z_706456/best.pt",
+  "checkpoint_epoch": 704,
+  "parameters": 4706674,
+  "rows": 2000,
+  "csv": "submissions/submission_sla800_49k_val1k_tta.csv",
+  "csv_sha256": "a2c1c4588505451463dae72f0311686ad014a52cf020d0dd212b7f3e9699e714",
+  "horizontal_flip_tta": true,
+  "translation_tta": true,
+  "rotation_vote": true,
+  "best_metrics": {
+    "epoch": 704,
+    "lr": 0.0035549708187568143,
+    "train_loss": 1.2019917362758092,
+    "train_accuracy_mixup_weighted": 0.9346734693877551,
+    "val_loss": 0.08816006183624267,
+    "val_accuracy": 0.987,
+    "seconds": 21.17422750499827,
+    "train_joint_loss": 0.47303384497700907,
+    "train_distillation_loss": 0.06120929404302519,
+    "train_classification_loss": 0.6677485984490842
+  },
+  "public_accuracy_reported": 0.896,
+  "public_score_source": "User-provided Kaggle screenshot naming submission_sla800_49k_val1k_tta.csv",
+  "local_checkpoint": "runs_hpc/a100_800_val1k/sla800_49k_val1k_sweep000_20261101T072329Z_706456/best.pt",
+  "checkpoint_sha256": "ae78410b27809cc3fe11ae72619662167f8a7e6ec5216f6a8fc586a92310feaa",
+  "training_images": 49000,
+  "validation_images": 1000,
+  "local_csv_and_checkpoint_verified": true
+}

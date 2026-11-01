@@ -1,0 +1,224 @@
+{
+  "scope": "Aggregate pixel statistics and CSV integrity only; no hidden labels, external data, source matching, or evaluation images used for training.",
+  "images": {
+    "training": {
+      "images": 45000,
+      "formats": {
+        "PNG": 45000
+      },
+      "sizes": {
+        "(32, 32)": 45000
+      },
+      "modes": {
+        "RGB": 45000
+      },
+      "features": [
+        "mean_red",
+        "mean_green",
+        "mean_blue",
+        "std_red",
+        "std_green",
+        "std_blue",
+        "vertical_edge",
+        "horizontal_edge"
+      ],
+      "feature_mean": [
+        0.4913360834524799,
+        0.4821786853213472,
+        0.44650479847494545,
+        0.20207276080693407,
+        0.19919813023467237,
+        0.20084696550616682,
+        0.06082931047508615,
+        0.05403126534425001
+      ],
+      "feature_std": [
+        0.12854901685694708,
+        0.12588693608096424,
+        0.1533406838725497,
+        0.06052506222760386,
+        0.06116826690130695,
+        0.0677229844791936,
+        0.01942458318618924,
+        0.018602042308194445
+      ]
+    },
+    "validation": {
+      "images": 5000,
+      "formats": {
+        "PNG": 5000
+      },
+      "sizes": {
+        "(32, 32)": 5000
+      },
+      "modes": {
+        "RGB": 5000
+      },
+      "features": [
+        "mean_red",
+        "mean_green",
+        "mean_blue",
+        "std_red",
+        "std_green",
+        "std_blue",
+        "vertical_edge",
+        "horizontal_edge"
+      ],
+      "feature_mean": [
+        0.4919720350796573,
+        0.4819759160539218,
+        0.4467659581801482,
+        0.20336632279351852,
+        0.2003710045615826,
+        0.20101192795743755,
+        0.06068363851992394,
+        0.0539709150326798
+      ],
+      "feature_std": [
+        0.12661516692993413,
+        0.12487342382231681,
+        0.1531068789474864,
+        0.06054594164382542,
+        0.06072374623739874,
+        0.0669400691666395,
+        0.019272265879650932,
+        0.018471089220843277
+      ],
+      "standardized_mean_difference_from_training": [
+        0.0049845033448315595,
+        -0.0016172222062963608,
+        0.0017044327374603414,
+        0.02136865022978074,
+        0.019244354039284498,
+        0.0024499617216076678,
+        -0.007528821090785638,
+        -0.0032557236244611884
+      ]
+    },
+    "test": {
+      "images": 2000,
+      "formats": {
+        "PNG": 2000
+      },
+      "sizes": {
+        "(32, 32)": 2000
+      },
+      "modes": {
+        "RGB": 2000
+      },
+      "features": [
+        "mean_red",
+        "mean_green",
+        "mean_blue",
+        "std_red",
+        "std_green",
+        "std_blue",
+        "vertical_edge",
+        "horizontal_edge"
+      ],
+      "feature_mean": [
+        0.5129619715073535,
+        0.49779850068933906,
+        0.46122425130208405,
+        0.21030746067879685,
+        0.21005177601803834,
+        0.21178347366780376,
+        0.06477334361163818,
+        0.05859911316677205
+      ],
+      "feature_std": [
+        0.14932333761693145,
+        0.14467473812484344,
+        0.16204931681376863,
+        0.06012988361541307,
+        0.06089373653641441,
+        0.0674314661887226,
+        0.01953878755074263,
+        0.01963060101396296
+      ],
+      "standardized_mean_difference_from_training": [
+        0.1552202104818626,
+        0.11518477154160287,
+        0.09330571465107693,
+        0.1364992648416717,
+        0.17783778778542886,
+        0.16183681214392853,
+        0.20244738174006738,
+        0.23886372110126086
+      ]
+    }
+  },
+  "submissions": {
+    "submissions/submission_sla600_tta.csv": {
+      "rows": 2000,
+      "ids_and_order_match": true,
+      "csv_sha256": "bf144e5fc719923377251745f674dbfad1f1bb39f1abf9901a3bced14e05fb96",
+      "metadata_hash_matches": true,
+      "predicted_class_counts": {
+        "0": 181,
+        "1": 221,
+        "2": 206,
+        "3": 202,
+        "4": 192,
+        "5": 213,
+        "6": 179,
+        "7": 203,
+        "8": 202,
+        "9": 201
+      },
+      "checkpoint_epoch": 588
+    },
+    "submissions/submission_sam600_tta.csv": {
+      "rows": 2000,
+      "ids_and_order_match": true,
+      "csv_sha256": "91e159a803287d761a55bf0ed552331bf49687048962735eeb39320cc1f9d892",
+      "metadata_hash_matches": true,
+      "predicted_class_counts": {
+        "0": 180,
+        "1": 222,
+        "2": 214,
+        "3": 200,
+        "4": 192,
+        "5": 213,
+        "6": 183,
+        "7": 203,
+        "8": 197,
+        "9": 196
+      },
+      "checkpoint_epoch": 575
+    },
+    "submissions/submission_sla800_49k_val1k_tta.csv": {
+      "rows": 2000,
+      "ids_and_order_match": true,
+      "csv_sha256": "a2c1c4588505451463dae72f0311686ad014a52cf020d0dd212b7f3e9699e714",
+      "metadata_hash_matches": true,
+      "predicted_class_counts": {
+        "0": 174,
+        "1": 217,
+        "2": 205,
+        "3": 205,
+        "4": 200,
+        "5": 212,
+        "6": 171,
+        "7": 207,
+        "8": 213,
+        "9": 196
+      },
+      "checkpoint_epoch": 704
+    }
+  },
+  "pairwise_disagreements": {
+    "submissions/submission_sla600_tta.csv vs submissions/submission_sam600_tta.csv": {
+      "images": 114,
+      "fraction": 0.057
+    },
+    "submissions/submission_sla600_tta.csv vs submissions/submission_sla800_49k_val1k_tta.csv": {
+      "images": 95,
+      "fraction": 0.0475
+    },
+    "submissions/submission_sam600_tta.csv vs submissions/submission_sla800_49k_val1k_tta.csv": {
+      "images": 121,
+      "fraction": 0.0605
+    }
+  }
+}

@@ -75,6 +75,14 @@ def report(run_root, readme):
 def main():
     parser = argparse.ArgumentParser(description='CIFAR-10 ResNet experiment lab')
     commands = parser.add_subparsers(dest='command', required=True)
+    p = commands.add_parser('extend', help='Continue a completed run with preserved state and an explicit LR restart')
+    p.add_argument('--checkpoint', required=True, help='Completed source last.pt, not best.pt')
+    p.add_argument('--epochs', type=int, required=True, help='New total epoch count, e.g. 800 after 600')
+    p.add_argument('--restart-lr', type=float, default=0.001)
+    p.add_argument('--warmup-epochs', type=int, default=5)
+    p.add_argument('--output-dir', default='runs_hpc/sla_continuation')
+    p.add_argument('--device')
+    p.add_argument('--data-root')
     for name in ('inspect', 'train', 'sweep', 'check-data'):
         p = commands.add_parser(name)
         p.add_argument('--config', required=True)
@@ -106,7 +114,11 @@ def main():
     p.add_argument('--output-dir', required=True)
     commands.add_parser('download')
     args = parser.parse_args()
-    if args.command == 'prepare-stage':
+    if args.command == 'extend':
+        from .engine import extend_training
+        extend_training(args.checkpoint, args.epochs, args.restart_lr, args.warmup_epochs,
+                        args.output_dir, args.device, args.data_root)
+    elif args.command == 'prepare-stage':
         from .stages import prepare_stage
         prepare_stage(args.source, args.stage, args.output_dir)
     elif args.command == 'plan':

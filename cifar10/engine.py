@@ -6,6 +6,7 @@ import platform
 import random
 import subprocess
 import time
+from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
@@ -69,6 +70,8 @@ def atomic_save(value, path):
 def epoch_lr(config, epoch):
     base = config['optimizer']['lr']
     s, total = config['scheduler'], config['training']['epochs']
+    restart = s.get('restart_epoch', 0)
+    epoch, total = epoch - restart, total - restart
     if epoch < s['warmup_epochs']:
         return base * (epoch + 1) / s['warmup_epochs']
     if s['name'] == 'constant':
@@ -112,11 +115,54 @@ def evaluate(model, batches, device, progress_label=None):
     return {'loss': loss_sum / count, 'accuracy': correct / count}
 
 
-def train(config, resume=None):
+def validate_extension(checkpoint, config):
+    if checkpoint is None:
+        raise ValueError('Extension requires a completed source checkpoint')
+    old = checkpoint['config']
+    completed = checkpoint['epoch'] + 1
+    if completed != old['training']['epochs'] or config['training']['epochs'] <= completed:
+        raise ValueError('Extend from last.pt of a completed run to a larger total epoch budget')
+    if config['scheduler'].get('restart_epoch') != completed:
+        raise ValueError('Extension schedule must restart at the completed source epoch')
+    expected = deepcopy(old)
+    expected['experiment'].update(name=config['experiment']['name'], output_dir=config['experiment']['output_dir'])
+    expected['training'].update(epochs=config['training']['epochs'], device=config['training']['device'])
+    expected['data']['root'] = config['data']['root']
+    expected['optimizer']['lr'] = config['optimizer']['lr']
+    for key in ('name', 'warmup_epochs', 'min_lr', 'restart_epoch'):
+        expected['scheduler'][key] = config['scheduler'][key]
+    if expected != config:
+        raise ValueError('Extension must preserve architecture, objective, split and optimizer settings except LR')
+
+
+def extend_training(checkpoint_path, total_epochs, restart_lr=.001, warmup_epochs=5,
+                    output_dir='runs_hpc/sla_continuation', device_name=None, data_root=None):
+    checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=True)
+    config = deepcopy(checkpoint['config'])
+    config['experiment'].update(name=config['experiment']['name'] + f'_extend{total_epochs}',
+                                output_dir=str(output_dir))
+    config['training']['epochs'] = total_epochs
+    if device_name:
+        config['training']['device'] = device_name
+    if data_root:
+        config['data']['root'] = str(data_root)
+    config['optimizer']['lr'] = restart_lr
+    config['scheduler'].update(name='cosine', warmup_epochs=warmup_epochs, min_lr=0.,
+                               restart_epoch=checkpoint['epoch'] + 1)
+    validate(config)
+    validate_extension(checkpoint, config)
+    return train(config, resume=checkpoint_path, extension=True)
+
+
+def train(config, resume=None, extension=False):
     checkpoint = torch.load(resume, map_location='cpu', weights_only=True) if resume else None
-    if checkpoint:
+    if extension:
+        validate_extension(checkpoint, config)
+    elif checkpoint:
         if checkpoint['config'] != config:
             raise ValueError("Resume requires the saved config unchanged. Start a new run for new settings.")
+    if config['scheduler'].get('restart_epoch', 0) and checkpoint is None:
+        raise ValueError('A restarted schedule requires an extension source or a saved branch checkpoint')
     validate(config)
     seed_all(config['experiment']['seed'], config['experiment']['deterministic'])
     model, parameters = build_model(config['model'])
@@ -181,9 +227,10 @@ def train(config, resume=None):
               f'waiting for first batch ({len(train_loader)} batches total)', flush=True)
         for batch_index, (images, labels) in enumerate(train_loader, 1):
             if config['scheduler'].get('per_step', False):
-                step = epoch * len(train_loader) + batch_index - 1
+                restart = config['scheduler'].get('restart_epoch', 0)
+                step = (epoch - restart) * len(train_loader) + batch_index - 1
                 warmup = config['scheduler']['warmup_epochs'] * len(train_loader)
-                steps = config['training']['epochs'] * len(train_loader)
+                steps = (config['training']['epochs'] - restart) * len(train_loader)
                 peak = config['optimizer']['lr']
                 floor = config['scheduler']['min_lr']
                 if step < warmup:
@@ -224,9 +271,13 @@ def train(config, resume=None):
                 from .sam import perturb_weights, batch_statistics_without_updates
                 with perturb_weights(model, sam_rho), batch_statistics_without_updates(model):
                     optimizer.zero_grad(set_to_none=True)
-                    perturbed_logits = model(mixed)
-                    perturbed_loss = (lam * criterion(perturbed_logits, labels)
-                                      + (1 - lam) * criterion(perturbed_logits, labels[order]))
+                    if use_sla:
+                        perturbed_loss = training_loss(
+                            model, images, labels, config['training']['label_smoothing'])[0]
+                    else:
+                        perturbed_logits = model(mixed)
+                        perturbed_loss = (lam * criterion(perturbed_logits, labels)
+                                          + (1 - lam) * criterion(perturbed_logits, labels[order]))
                     if not torch.isfinite(perturbed_loss):
                         raise RuntimeError(f'Nonfinite SAM second-pass loss at epoch {epoch + 1}')
                     perturbed_loss.backward()

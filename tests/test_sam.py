@@ -72,13 +72,32 @@ class SAMTests(unittest.TestCase):
         self.assertEqual(load_config('configs/sla/distillation.yaml')['training']['epochs'], 400)
         self.assertEqual(configs[3]['data']['val_fraction'], 0.)
 
-    def test_rejects_unsupported_sam_amp_and_sla_combinations(self):
+    def test_sam_and_sla_sam_require_float32(self):
         with self.assertRaisesRegex(ValueError, 'SAM currently'):
             load_config('configs/hpc_a100/sam.yaml', ['training.amp=true'])
         with self.assertRaisesRegex(ValueError, 'SAM currently'):
-            load_config('configs/hpc_a100/sla600.yaml', ['training.amp=false', 'optimizer.sam_rho=0.05'])
+            load_config('configs/hpc_a100/sla600.yaml', ['optimizer.sam_rho=0.05'])
+        combined = load_config('configs/robustness/sla_sam.yaml')
+        self.assertTrue(combined['training']['sla'])
+        self.assertFalse(combined['training']['amp'])
+        self.assertEqual(build_model(combined['model'])[1], 4_706_674)
+        matched = load_config('configs/robustness/sla_fp32.yaml')
+        combined['experiment']['name'] = matched['experiment']['name']
+        combined['optimizer'].pop('sam_rho')
+        self.assertEqual(combined, matched)
 
     def test_engine_sam_checkpoint_resume_matches_uninterrupted_training(self):
+        self.verify_resume('configs/hpc_a100/sam.yaml')
+
+    def test_engine_combined_sla_sam_uses_joint_loss_on_both_passes_and_resumes(self):
+        from cifar10.sla import training_loss
+        with patch('cifar10.sla.training_loss', wraps=training_loss) as objective:
+            self.verify_resume('configs/robustness/sla_sam.yaml')
+            # Two complete epochs plus one resumed epoch, one batch each,
+            # and TWO full SLA objectives per optimizer step.
+            self.assertEqual(objective.call_count, 6)
+
+    def verify_resume(self, config_path):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / 'train_images').mkdir()
@@ -87,7 +106,7 @@ class SAMTests(unittest.TestCase):
                 for index in range(20):
                     Image.new('RGB', (32, 32), (index * 10, 50, 90)).save(root / 'train_images' / f'{index}.png')
                     handle.write(f'{index},{index % 10}\n')
-            config = load_config('configs/hpc_a100/sam.yaml', [f'data.root={tmp}',
+            config = load_config(config_path, [f'data.root={tmp}',
                 f'experiment.output_dir={tmp}/runs', 'data.filename_column=null',
                 'data.num_workers=0', 'training.device=cpu', 'training.epochs=2',
                 'scheduler.warmup_epochs=0', 'training.batch_size=10',
