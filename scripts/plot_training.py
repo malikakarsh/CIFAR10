@@ -61,7 +61,7 @@ def main():
             values = [r[key] for r in rows]
             ax.plot(epochs, values, color=color, alpha=.3, lw=1)
             ax.plot(epochs, smooth(values), color=color, lw=2, label=f'{label} (10-epoch mean)')
-        ax.set_ylabel('Cross-entropy loss')
+        ax.set_ylabel('Loss')
         ax.legend(frameon=False, fontsize=9)
     axes[0, 0].set_title('Loss across the run', loc='left', weight='bold')
     axes[0, 0].set_ylim(bottom=0)

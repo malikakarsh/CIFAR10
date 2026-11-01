@@ -4,7 +4,7 @@ Configurable PyTorch experiments for CIFAR-10 classification under a **5-million
 
 ## Results
 
-**Best completed validation accuracy: 97.26%. Best reported public Kaggle accuracy: 88.80%.**
+**Best completed validation accuracy: 97.86%. Best reported public Kaggle accuracy: 90.10%.**
 
 <!-- RESULTS:START -->
 | Architecture | Optimizer | Parameters | Epochs completed | Best epoch | Training loss | Validation loss | Validation accuracy |
@@ -18,10 +18,13 @@ Configurable PyTorch experiments for CIFAR-10 classification under a **5-million
 | Deeper + wider | SGD | 4,180,858 | 200/200 | 195 | 0.0016 | 0.1761 | 95.82% |
 | Deeper + wider | AdamW | 4,180,858 | 143/200 | 136 | 0.0027 | 0.3771 | 94.34% |
 | Attention ResNet control | SGD | 4,534,066 | 300/300 | 300 | 0.4666 | 0.1324 | 97.14% |
-| Pre-activation control | SGD | 4,696,394 | 400/400 | 389 | 0.6549 | 0.1689 | **97.26%** |
-| Attention ResNet, A100 | SGD | 4,534,066 | 600/600 | 583 | 0.4427 | **0.1267** | 97.10% |
+| Pre-activation control | SGD | 4,696,394 | 400/400 | 389 | 0.6549 | 0.1689 | 97.26% |
+| Attention ResNet, A100 | SGD | 4,534,066 | 600/600 | 583 | 0.4427 | 0.1267 | 97.10% |
+| Pre-activation A100 control | SGD | 4,696,394 | 600/600 | 575 | — | 0.1725 | 97.38% |
+| Pre-activation A100 + SAM | SGD + SAM | 4,696,394 | 600/600 | 575 | 0.6565 | 0.1617 | 97.78% |
+| Pre-activation A100 + SLA+SD | SGD | 4,706,674 | 600/600 | 588 | 1.0618 | **0.1096** | **97.86%** |
 
-Losses and accuracy are reported at each run's highest-validation-accuracy epoch. Ten runs are complete; the larger AdamW trial has 143/200 epochs saved and remains incomplete. All runs use the same stratified 45,000/5,000 split. Training loss uses augmented images and the configured label smoothing; validation loss is ordinary cross-entropy on unaugmented images. Training losses across different objectives are not directly comparable.
+Losses and accuracy are reported at each run's highest-validation-accuracy epoch. Thirteen runs are reported complete; the larger AdamW trial has 143/200 epochs saved and remains incomplete. Validation runs are configured with the same stratified 45,000/5,000 split. SAM and SLA+SD results are verified against downloaded checkpoints, configs, metric histories, and submission CSV hashes. The A100 SGD-control row is from a user-pasted summary; its training loss and full export remain pending. Training loss uses augmented images and the configured label smoothing; validation loss is ordinary cross-entropy on unaugmented images. SLA training loss sums ordinary classification, joint class/rotation classification, and distillation losses; its total is not directly comparable with SAM or ordinary classification loss.
 <!-- RESULTS:END -->
 
 | Public Kaggle submission | Accuracy |
@@ -31,10 +34,14 @@ Losses and accuracy are reported at each run's highest-validation-accuracy epoch
 | Deeper + wider SGD submission | 85.30% |
 | Attention ResNet control, intermediate epoch 156 | 81.10% |
 | Attention ResNet control, completed epoch 300 | 87.80% |
-| Pre-activation control, best epoch 389 of 400 | **88.80%** |
-| Attention600, best epoch 583, mirror/translation TTA | **88.80%** |
+| Pre-activation control, best epoch 389 of 400 | 88.80% |
+| Attention600, best epoch 583, mirror/translation TTA | 88.80% |
+| SAM600, best epoch 575, mirror/translation TTA | 89.60% |
+| SLA+SD600, best epoch 588, mirror/translation TTA and joint-head vote | **90.10%** |
 
 Public scores are reported from leaderboard screenshots. Hidden evaluation labels are unavailable; evaluation loss and private accuracy cannot be calculated. Details: [submission history](docs/leaderboard.md).
+
+The A100 comparison shows **SAM at 97.78% validation accuracy**, up 0.40 percentage points from its matched float32 SGD control (97.38%). **SLA+SD600 reaches 97.86% accuracy and 0.1096 loss**, the strongest verified validation result so far. Its accuracy advantage over SAM is only four validation images; SLA uses CUDA AMP while SAM/control use float32. Their reported public scores are **89.60% for SAM** and **90.10% for SLA+SD**, making SLA+SD the current public best. [HPC result records](docs/a100_reported_results.json).
 
 The completed A100 attention600 run reached **97.10% best validation accuracy** (epoch 583), with **0.1267 validation loss**, and **88.80% reported public accuracy**. It ties the 400-epoch plain control on the public leaderboard. Its lower validation loss does not translate into a higher public score, and its validation accuracy does not exceed the 300-epoch attention baseline. The 300-epoch and 600-epoch submissions also differ in TTA and training platform/precision, so this is not an isolated epoch-budget comparison. Further epoch increases are not supported by these results. [600-epoch curves](docs/figures/attention600/learning_curves.png) ([PDF](docs/figures/attention600/learning_curves.pdf)). Published plots and metric snapshots are in `docs/figures/attention600/`; the imported raw run is under `runs_hpc/attention600/`, and its submission CSV is in `submissions/`. Raw runs and submission files remain Git-ignored.
 
@@ -42,6 +49,16 @@ The completed pre-activation control achieved **97.26% validation accuracy** and
 
 The completed attention control achieved **97.14% validation accuracy**, improving on the previous 95.82% best by **1.32 percentage points**, with validation loss falling from 0.1761 to **0.1324**. Its checkpoint is `runs_attention/attention_resnet_sweep000_20261031T025638Z_303819/best.pt`. This result is from the ten-class attention model without an auxiliary rotation task or inference augmentation; its reported public score is **87.80%**, improving on 85.30% by **2.50 percentage points**. Matched completed SGD recipes also outperform their AdamW counterparts. These are single-seed validation results; see the earlier [model comparison](docs/model_comparison.md).
 
+
+### SAM and SLA+SD learning curves
+
+![SAM and SLA+SD training and validation curves over 600 epochs](docs/figures/sam_sla600_comparison.png)
+
+Thin lines show per-epoch metrics; bold lines show trailing 10-epoch means. The marked checkpoints are **SAM epoch 575** (97.78% validation, 89.60% public) and **SLA+SD epoch 588** (97.86% validation, 90.10% public). Validation loss is ordinary cross-entropy for both models; SLA training loss includes its joint-label and distillation objectives. Public scores are separate submission results, not measurements from the curves.
+
+Individual plots and snapshots: [SAM](docs/figures/sam600/learning_curves.png) ([PDF](docs/figures/sam600/learning_curves.pdf), [metrics](docs/figures/sam600/metrics_snapshot.csv)); [SLA+SD](docs/figures/sla600/learning_curves.png) ([PDF](docs/figures/sla600/learning_curves.pdf), [metrics](docs/figures/sla600/metrics_snapshot.csv)). Rebuild the comparison with `python scripts/plot_sam_sla.py` after installing the plotting requirements.
+
+The imported checkpoints, configs, summaries and raw metrics are stored under Git-ignored `runs_hpc/a100_experiments/`. Prediction CSVs and their metadata are under Git-ignored `submissions/`; published curves and metric snapshots are tracked under `docs/figures/`.
 
 ### Pre-activation control learning curves
 
@@ -82,7 +99,7 @@ python -m cifar10 check-data --config configs/base.yaml
 
 ## Current experiment plan: Pre-activation ResNet + SLA
 
-The plain pre-activation control has completed 400 epochs, with **97.26% validation accuracy** and **88.80% reported public accuracy**. The SLA+SD comparison is in progress; no completed SLA result is available yet.
+The plain pre-activation control has completed 400 epochs, with **97.26% validation accuracy** and **88.80% reported public accuracy**. The separate HPC SLA+SD600 trial is reported complete at 97.86% validation accuracy and 0.1096 validation loss; its reported public score is **90.10%**.
 
 | Trial | Blocks | Channels | Trainable parameters | Epochs |
 |---|---|---|---:|---:|
@@ -136,7 +153,14 @@ nohup python -u scripts/queue_a100.py --project "$PWD" \
   > runs_hpc/a100_queue.log 2>&1 &
 ```
 
-On HPC, first upload/extract the small code update and activate the existing environment as described in the [A100 queue guide](docs/a100_queue.md). The launcher waits for the current attention run without stopping it, resumes saved trials, and skips completed matching trials. New results go to `runs_hpc/a100_experiments/`. SAM and its control use float32; SLA uses CUDA AMP. The initial attention600 result is recorded above; no completed follow-up queue results have been imported yet.
+On HPC, first upload/extract the small code update and activate the existing environment as described in the [A100 queue guide](docs/a100_queue.md). The launcher waits for the current attention run without stopping it, resumes saved trials, and skips completed matching trials. New results go to `runs_hpc/a100_experiments/`. SAM and its control use float32; SLA uses CUDA AMP. The initial attention600 result is recorded above. SAM and SLA exports are imported and verified; the matched SGD-control export remains pending. Reported public scores are 89.60% for SAM and 90.10% for SLA+SD.
+
+
+## Selected methods: full-data training and second seeds
+
+SLA+SD600 now has the best reported public score (**90.10%**), followed by SAM600 (**89.60%**). A separate follow-up plan preserves their measured settings and schedules **600 epochs each** for SLA full-50k, SAM full-50k, then a seed-43 validation repeat of each method. Both architectures remain below 5 million parameters. Full-data trials intentionally report no validation metrics and use `last.pt`.
+
+The [follow-up guide](docs/a100_finalists.md) includes the small update upload and waiting-launcher commands. `scripts/queue_finalists.py` waits for the current A100 queue to end, then runs the new plan into `runs_hpc/a100_finalists/`. It is prepared locally and must be uploaded and launched on HPC; editing local configs alone does not activate it. No new full-data or repeat-seed results are claimed yet, and the backlog may require a later allocation.
 
 ## Configuration and checkpoints
 
@@ -169,7 +193,7 @@ python -m cifar10 report --runs runs --readme README.md
 python -m unittest discover -s tests -v
 ```
 
-**29 tests passed at the latest code verification**, covering data loading, parameter limits, checkpoint resume, submission formatting, HPC launcher arguments, stage generation, attention models, RAM caching, SLA joint-label alignment, detached self-distillation targets, head gradients, prediction augmentation, checkpoint inference, SAM analytical updates, BatchNorm handling, exact SAM resume, and queue locking. SAM execution on CUDA and completed SLA600 results remain unverified.
+**30 tests passed at the latest code verification**, covering data loading, parameter limits, checkpoint resume, submission formatting, HPC launcher arguments, stage generation, attention models, RAM caching, SLA joint-label alignment, detached self-distillation targets, head gradients, prediction augmentation, checkpoint inference, SAM analytical updates, BatchNorm handling, exact SAM resume, and queue locking. SAM and SLA600 CUDA results are verified from imported checkpoints, configs, summaries, and 600-epoch histories; public scores come from user-provided screenshots. CSV IDs, labels, order, and hashes have been verified.
 
 To generate learning curves:
 

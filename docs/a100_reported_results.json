@@ -1,0 +1,45 @@
+{
+  "source": "Initial user-pasted HPC summaries; SAM/SLA subsequently verified from locally imported checkpoints, configs, summaries, metrics and submission metadata.",
+  "results": [
+    {
+      "name": "a100_sgd_control_sweep000",
+      "epochs_completed": 600,
+      "best_epoch": 575,
+      "validation_accuracy": 0.9738,
+      "validation_loss": 0.17251155807971955,
+      "parameters": 4696394,
+      "artifacts_verified": false
+    },
+    {
+      "name": "a100_sam005_sweep000",
+      "epochs_completed": 600,
+      "best_epoch": 575,
+      "validation_accuracy": 0.9778,
+      "validation_loss": 0.16169281017780304,
+      "parameters": 4696394,
+      "training_loss": 0.6565001006762187,
+      "local_run": "runs_hpc/a100_experiments/a100_sam005_sweep000_20261031T221410Z_7710c7",
+      "artifacts_verified": true
+    },
+    {
+      "name": "a100_sla600_sweep000",
+      "epochs_completed": 600,
+      "best_epoch": 588,
+      "validation_accuracy": 0.9786,
+      "validation_loss": 0.10959337108135224,
+      "parameters": 4706674,
+      "training_loss": 1.0618439277225071,
+      "local_run": "runs_hpc/a100_experiments/a100_sla600_sweep000_20261101T013008Z_62b447",
+      "artifacts_verified": true
+    }
+  ],
+  "full_data_control": {
+    "epochs_completed_reported": 493,
+    "validation_available": false
+  },
+  "public_scores": {
+    "a100_sam005_sweep000": 0.896,
+    "a100_sla600_sweep000": 0.901
+  },
+  "public_score_source": "User-provided Kaggle screenshots on 2026-11-01; SAM/SLA local CSV hashes and checkpoints verified"
+}

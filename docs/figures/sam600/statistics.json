@@ -1,0 +1,32 @@
+{
+  "run": "runs_hpc/a100_experiments/a100_sam005_sweep000_20261031T221410Z_7710c7",
+  "epochs_plotted": 600,
+  "latest": {
+    "epoch": 600.0,
+    "lr": 0.0,
+    "train_loss": 0.657369769859314,
+    "train_accuracy_mixup_weighted": 0.9372444444444444,
+    "val_loss": 0.161761332321167,
+    "val_accuracy": 0.9774,
+    "seconds": 19.044306324998615
+  },
+  "best_accuracy_epoch": {
+    "epoch": 575.0,
+    "lr": 0.0004349699923151873,
+    "train_loss": 0.6565001006762187,
+    "train_accuracy_mixup_weighted": 0.9379555555555555,
+    "val_loss": 0.16169281017780304,
+    "val_accuracy": 0.9778,
+    "seconds": 19.061816314999305
+  },
+  "lowest_validation_loss_epoch": {
+    "epoch": 570.0,
+    "lr": 0.0006259566062044365,
+    "train_loss": 0.662050411775377,
+    "train_accuracy_mixup_weighted": 0.9340888888888889,
+    "val_loss": 0.15990319204330444,
+    "val_accuracy": 0.9762,
+    "seconds": 19.050506111001596
+  },
+  "source_metrics_sha256": "fbf29fb121c30462371585d60f8f83ab8e4f48594538275fc2d46d142822cd84"
+}

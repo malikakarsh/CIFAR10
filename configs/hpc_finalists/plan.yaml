@@ -1,0 +1,7 @@
+# Follow up the measured strongest methods; no change to the running first queue.
+sweeps:
+  - sla_full50k_sweep.yaml
+  - sam_full50k_sweep.yaml
+  - sla_seed43_sweep.yaml
+  - sam_seed43_sweep.yaml
+interleave: false

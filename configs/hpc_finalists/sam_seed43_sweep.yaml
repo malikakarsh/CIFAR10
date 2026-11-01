@@ -1,0 +1,6 @@
+base: ../hpc_a100/sam.yaml
+overrides:
+  experiment.name: finalist_sam005_seed43
+  experiment.output_dir: runs_hpc/a100_finalists
+grid:
+  experiment.seed: [43]

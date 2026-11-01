@@ -51,3 +51,7 @@ For a preview without allocating a GPU or starting training:
 ```bash
 python scripts/queue_a100.py --project "$PWD" --dry-run
 ```
+
+## Reported validation results (2026-11-01)
+
+The user supplied HPC summary output reporting all 600 epochs completed for SGD control (best epoch 575, 97.38% validation accuracy, loss 0.1725), SAM (epoch 575, 97.78%, loss 0.1617), and SLA+SD (epoch 588, 97.86%, loss 0.1096). Full-data control was at epoch 493 without validation, as intended. SAM and SLA exported checkpoints, configs, training losses and curves are now imported and verified; the matched SGD-control export remains pending. At their selected epochs, SAM training loss is 0.6565 and SLA training loss is 1.0618 (the sum of three objective terms). Subsequent user screenshots report 89.60% public accuracy for SAM600 and 90.10% for SLA+SD600; the matched SGD600 control has no reported public submission. Raw reported values and provenance are recorded in `docs/a100_reported_results.json`.

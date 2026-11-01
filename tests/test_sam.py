@@ -119,6 +119,23 @@ class SAMTests(unittest.TestCase):
             with queue_guard(lock):
                 pass
 
+    def test_finalist_configs_retain_measured_recipes_and_fixed_validation_split(self):
+        configs = plan_configs('configs/hpc_finalists/plan.yaml', [])
+        self.assertEqual(len(configs), 4)
+        for config, source, full_data in zip(configs,
+                ['sla600', 'sam', 'sla600', 'sam'], [True, True, False, False]):
+            expected = load_config(f'configs/hpc_a100/{source}.yaml')
+            actual = deepcopy(config)
+            actual['experiment'] = expected['experiment']
+            if full_data:
+                self.assertEqual(actual['data']['val_fraction'], 0.)
+                actual['data']['val_fraction'] = expected['data']['val_fraction']
+            else:
+                self.assertEqual(config['experiment']['seed'], 43)
+                self.assertEqual(config['data']['split_seed'], 42)
+            self.assertEqual(actual, expected)
+            self.assertLessEqual(build_model(config['model'])[1], 5_000_000)
+
 
 if __name__ == '__main__':
     unittest.main()

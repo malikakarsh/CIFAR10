@@ -1,0 +1,6 @@
+base: ../hpc_a100/sla600.yaml
+overrides:
+  experiment.name: finalist_sla600_seed43
+  experiment.output_dir: runs_hpc/a100_finalists
+grid:
+  experiment.seed: [43]
