@@ -1,5 +1,7 @@
 # Two experiments for the 15-hour A100 allocation
 
+**Reported outcome (2026-11-02):** both trials finished. RandAugment selected epoch 586 (98.04% validation accuracy, 0.104238 loss) and scored **90.60% publicly**, below the 91.20% baseline. The continuation reached epoch 700 but retained its original epoch-598 source as best. New exports await local verification. The commands below document the completed queue; they are not a recommendation to repeat it. [Reported outcomes](sla_sam_two_trial_reported_results.json).
+
 Use **one A100, 15 hours, six CPU cores and 16 GB RAM**. The queue runs these two experiments sequentially:
 
 | Order | Experiment | Starting weights | Epochs | Settings |
@@ -9,7 +11,7 @@ Use **one A100, 15 hours, six CPU cores and 16 GB RAM**. The queue runs these tw
 
 Both use **4,706,674 trainable parameters**, float32, SAM rho 0.05, batch size 128 and the original 45k/5k split. Trial 2 starts from the **original winning combined-method checkpoint**, not the RandAugment weights, original standalone SLA epoch 588, or an epoch-600 `last.pt`. Checksum and epoch verification occur before either trial trains. The source model is preserved.
 
-The earlier combination took about 10.05 hours; the extra 102 epochs are roughly 1 hour 43 minutes at its measured rate. Fifteen hours provides setup/export buffer, but RandAugment's actual runtime and both experiments' accuracy remain unmeasured. More compute is not a guarantee of improved public accuracy.
+The earlier combination took about 10.05 hours; the extra 102 epochs are roughly 1 hour 43 minutes at its measured rate. Fifteen hours provides setup/export buffer, but the original planning estimate was unmeasured; the reported completed outcomes are recorded above. More compute is not a guarantee of improved public accuracy.
 
 ## Upload and launch
 

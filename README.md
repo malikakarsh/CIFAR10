@@ -6,7 +6,9 @@ Configurable PyTorch experiments for CIFAR-10 classification under a **5-million
 
 **Best reported public Kaggle accuracy: 91.20%, achieved by SLA+SD+SAM600.** Original SLA600 scored 90.10%. The combined method reached **98.26% validation accuracy** and **0.09865 validation loss** at epoch **598**, verified against its imported checkpoint and complete 600-epoch history on the original 5k split. The separate 49k/1k SLA800 reported 98.70% validation accuracy and scored 89.60% publicly.
 
-**Latest submitted experiment: SLA+SD+SAM600**, with **4,706,674 parameters**. The screenshot confirms **91.20%** for `submission_sla_sam600_tta.csv`, improving the previous public best by **1.10 percentage points**. Its selected epoch **598**, full history, parameter count, split and submission hash have been verified locally. [Submission record](docs/sla_sam600_submission.json).
+**Best submitted model: SLA+SD+SAM600**, with **4,706,674 parameters**. The screenshot confirms **91.20%** for `submission_sla_sam600_tta.csv`, improving the previous public best by **1.10 percentage points**. Its selected epoch **598**, full history, parameter count, split and submission hash have been verified locally. [Submission record](docs/sla_sam600_submission.json).
+
+**Latest follow-ups:** SLA+SD+SAM with RandAugment scored **90.60%**; continuing the original winning checkpoint to epoch 700 retained epoch **598** as the best. Neither displaced the **91.20%** submission.
 
 <!-- RESULTS:START -->
 | Architecture | Optimizer | Parameters | Epochs completed | Best epoch | Training loss | Validation loss | Validation accuracy |
@@ -56,6 +58,7 @@ These values come from [user-provided HPC summaries](docs/a100_800_val1k_reporte
 | SLA800, 49k/1k split, best epoch 704 with TTA and joint vote | 89.60% |
 | Original SLA600 extended to 800, best epoch 748 with TTA | 89.40% |
 | SLA+SD+SAM600, best epoch 598, mirror/translation TTA and joint-head vote | **91.20%** |
+| SLA+SD+SAM + RandAugment600, best epoch 586 with the same inference policy | 90.60% |
 
 Public scores are reported from leaderboard screenshots. Hidden evaluation labels are unavailable; evaluation loss and private accuracy cannot be calculated. Details: [submission history](docs/leaderboard.md).
 
@@ -236,15 +239,27 @@ The imported export verifies **600/600 epochs completed**. Its selected `best.pt
 
 The matched float32 SLA control remains available in `configs/robustness/plan.yaml`. Comparing this combination with original mixed-precision SLA600 changes optimizer and precision, so the public gain alone cannot isolate SAM's contribution. [Reported submission](docs/sla_sam600_submission.json).
 
-### Prepared augmentation experiment
+### Completed follow-up experiments
 
-The requested **15-hour allocation** uses `scripts/run_sla_sam_15h_queue.py` for exactly two sequential trials: **RandAugment600**, then **the original 91.20% epoch-598 SLA+SD+SAM checkpoint continued to epoch 700** (102 additional epochs, peak LR 0.0001 with five warmup epochs). The second keeps the original augmentation; it does not continue the RandAugment weights. Both remain at 4,706,674 parameters on the original 45k/5k split. The queue checks both recipes/source files up front, resumes matching saved epochs, skips finished training, and exports each submission and curve. An export failure is reported without discarding training or preventing the next training trial. Local source-hash checks, dry run and CPU tests pass; these trials have not been started remotely by local changes. [Upload, combined launch, resume and export commands](docs/sla_sam_15h_queue.md).
+The user-reported 15-hour queue results did **not** improve the original **91.20%** submission. RandAugment completed 600 epochs, selected epoch **586** with **98.04% validation accuracy** and **0.10424 loss**, and scored **90.60% publicly** (0.60 points below baseline). The exact epoch-598 continuation completed epoch 700 but retained **the original epoch-598 checkpoint** as its best: **98.26% validation accuracy**, **0.09865 loss**. No separate continuation public score was reported. These outcomes come from supplied HPC summaries and a Kaggle screenshot; new local exports are pending verification. Preserve the original combined-method checkpoint; these results do not justify another epoch extension. [Reported outcomes](docs/sla_sam_two_trial_reported_results.json).
 
-The requested next HPC trial is **SLA+SD+SAM600 with RandAugment**, configured in `configs/robustness/sla_sam_randaugment.yaml`. It preserves the verified 91.20% recipe except replacing TrivialAugment with RandAugment (two operations, magnitude 5). It has **4,706,674 parameters**, the same 45k/5k split, float32, SAM rho 0.05 and 600 epochs. `scripts/run_sla_sam_randaugment.py` verifies the recipe and baseline split, resumes matching saved epochs, then automatically exports the selected submission, complete learning curves and a download bundle. Local dry-run and CPU tests pass; CUDA training and accuracy for this variant remain unmeasured. [HPC upload, launch and export commands](docs/sla_sam_randaugment.md).
+| Experiment | Epochs completed | Selected epoch | Validation accuracy | Validation loss | Public accuracy |
+|---|---:|---:|---:|---:|---:|
+| Original SLA+SD+SAM baseline | 600 | 598 | **98.26%** | **0.09865** | **91.20%** |
+| SLA+SD+SAM with RandAugment | 600 | 586 | 98.04% | 0.10424 | 90.60% |
+| Original epoch-598 checkpoint continued to 700 | 700 | 598 (source retained) | 98.26% | 0.09865 | Not separately submitted/reported |
+
+The continuation row describes its retained source checkpoint, not a new improvement at epoch 700. The new RandAugment and continuation summaries are user-reported; their raw checkpoints, histories and curves have not yet been imported locally.
+
+### Follow-up queue configuration
+
+The completed **15-hour allocation** used `scripts/run_sla_sam_15h_queue.py` for exactly two sequential trials: **RandAugment600**, then **the original 91.20% epoch-598 SLA+SD+SAM checkpoint continued to epoch 700** (102 additional epochs, peak LR 0.0001 with five warmup epochs). The second keeps the original augmentation; it does not continue the RandAugment weights. Both remain at 4,706,674 parameters on the original 45k/5k split. The queue checks both recipes/source files up front, resumes matching saved epochs, skips finished training, and exports each submission and curve. An export failure is reported without discarding training or preventing the next training trial. Local source-hash checks, dry run and CPU tests pass; the user has now reported both trials complete, as recorded above. [Upload, combined launch, resume and export commands](docs/sla_sam_15h_queue.md).
+
+The completed HPC augmentation trial is **SLA+SD+SAM600 with RandAugment**, configured in `configs/robustness/sla_sam_randaugment.yaml`. It preserves the verified 91.20% recipe except replacing TrivialAugment with RandAugment (two operations, magnitude 5). It has **4,706,674 parameters**, the same 45k/5k split, float32, SAM rho 0.05 and 600 epochs. `scripts/run_sla_sam_randaugment.py` verifies the recipe and baseline split, resumes matching saved epochs, then automatically exports the selected submission, complete learning curves and a download bundle. The user has now reported this variant complete at 90.60% public accuracy; its new raw export awaits local verification. [HPC upload, launch and export commands](docs/sla_sam_randaugment.md).
 
 `configs/robustness/sla_randaugment.yaml` replaces TrivialAugment with RandAugment (two operations, magnitude 5) in the proven mixed-precision SLA600 recipe. Architecture, 600-epoch budget, original 45k/5k split, cutout, optimizer and inference settings are preserved; the model still has **4,706,674 parameters**. This tests an augmentation change rather than another epoch increase. The configuration has been loaded and its parameter count checked, but it has **not started**, is **not automatically queued**, and has no measured accuracy yet.
 
-Completed checkpoints should be compared on the same held-out images with the same submission inference settings. The combined method has improved reported public accuracy to 91.20%; the augmentation variant remains untested. A 95% public score has not been achieved or established as an expected outcome.
+Completed checkpoints should be compared on the same held-out images with the same submission inference settings. The combined method achieved 91.20% reported public accuracy; its tested RandAugment variant scored 90.60%. The separate standalone SLA RandAugment preset remains untested. A 95% public score has not been achieved or established as an expected outcome.
 
 ## Configuration and checkpoints
 

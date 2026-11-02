@@ -1,0 +1,28 @@
+{
+  "source": "User-pasted HPC summaries and Kaggle screenshot on 2026-11-02",
+  "local_exports_verified": false,
+  "randaugment": {
+    "run": "runs_hpc/sla_sam_randaugment/sla_sam_randaugment600_sweep000_20261102T024813Z_ad58d3",
+    "epochs_completed": 600,
+    "selected_epoch": 586,
+    "validation_accuracy": 0.9804,
+    "validation_loss": 0.1042384027838707,
+    "training_loss": 0.6271135058085123,
+    "training_accuracy": 0.9974444444444445,
+    "submission": "submission_sla_sam_randaugment600_tta.csv",
+    "public_accuracy_reported": 0.906,
+    "change_from_baseline_percentage_points": -0.6
+  },
+  "continuation": {
+    "run": "runs_hpc/sla_sam_best598_extend700/sla_sam005_600_sweep000_extend700_from598_20261102T125545Z_683fce",
+    "epochs_completed": 700,
+    "selected_epoch": 598,
+    "selected_checkpoint_is_original_source": true,
+    "validation_accuracy": 0.9826,
+    "validation_loss": 0.09864976220130921,
+    "separate_public_score_reported": null,
+    "conclusion": "No validation-accuracy improvement beyond the starting checkpoint; summary retains original epoch-598 best.pt."
+  },
+  "best_public_accuracy_retained": 0.912,
+  "conclusion": "Neither trial displaced the original SLA+SD+SAM600 submission. No further epoch increase is justified by these results alone."
+}
