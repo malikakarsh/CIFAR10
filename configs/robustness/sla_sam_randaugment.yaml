@@ -1,0 +1,9 @@
+# Change only the augmentation policy from the verified 91.20% recipe.
+extends: sla_sam.yaml
+experiment:
+  name: sla_sam_randaugment600
+  output_dir: runs_hpc/sla_sam_randaugment
+augmentation:
+  trivialaugment: false
+  randaugment_ops: 2
+  randaugment_magnitude: 5

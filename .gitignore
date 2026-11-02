@@ -18,6 +18,7 @@ runs_attention/
 runs_attention600/
 runs_sla/
 submissions/
+exports/
 best_sub/
 *.pt
 *.pth

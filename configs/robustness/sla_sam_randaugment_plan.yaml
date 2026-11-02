@@ -1,0 +1,3 @@
+sweeps:
+  - sla_sam_randaugment_sweep.yaml
+interleave: false
