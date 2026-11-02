@@ -1,0 +1,6 @@
+extends: resnext_sla_sam.yaml
+experiment:
+  name: resnext29_8x14_sla_sam360
+  output_dir: runs_hpc/resnext_sla_sam360
+training:
+  epochs: 360

@@ -1,0 +1,3 @@
+sweeps:
+  - resnext_sla_sam360_sweep.yaml
+interleave: false

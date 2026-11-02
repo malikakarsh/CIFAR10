@@ -7,7 +7,7 @@ import yaml
 # Optional extensions are accepted in inherited files without adding keys to old
 # resolved configs. Existing checkpoint/config equality therefore stays intact.
 OPTIONAL = {
-    'model': {'architecture', 'se_reduction', 'rotation_head', 'sla_head'},
+    'model': {'architecture', 'se_reduction', 'rotation_head', 'sla_head', 'groups', 'base_width'},
     'data': {'cache_images'},
     'augmentation': {'trivialaugment', 'cutout_size', 'trivialaugment_first'},
     'training': {'rotation_weight', 'sla'},
@@ -92,8 +92,14 @@ def validate(c):
         raise ValueError("min_lr must be between 0 and optimizer.lr")
     if a['mixup_alpha'] < 0 or not 0 <= a['random_erasing'] <= 1:
         raise ValueError("Invalid mixup_alpha or random_erasing")
-    if m.get('architecture', 'resnet') not in ('resnet', 'attention_resnet', 'preact_resnet'):
+    if m.get('architecture', 'resnet') not in ('resnet', 'attention_resnet', 'preact_resnet', 'resnext'):
         raise ValueError('Unknown architecture')
+    if m.get('architecture') == 'resnext':
+        if any(type(m.get(key, default)) is not int or m.get(key, default) < 1
+               for key, default in [('groups', 8), ('base_width', 14)]):
+            raise ValueError('ResNeXt groups and base_width must be positive integers')
+        if m['kernel_size'] != 3:
+            raise ValueError('Grouped bottleneck model requires kernel_size=3')
     if type(m.get('se_reduction', 16)) is not int or m.get('se_reduction', 16) < 1:
         raise ValueError('se_reduction must be a positive integer')
     if type(a.get('cutout_size', 0)) is not int or not 0 <= a.get('cutout_size', 0) <= 32:
@@ -105,8 +111,8 @@ def validate(c):
         raise ValueError('Positive rotation_weight requires an attention_resnet rotation head')
     if weight > 0 and a['mixup_alpha']:
         raise ValueError('Disable mixup for the auxiliary rotation comparison')
-    if m.get('sla_head', False) and m.get('architecture') != 'preact_resnet':
-        raise ValueError('SLA head requires preact_resnet')
+    if m.get('sla_head', False) and m.get('architecture') not in ('preact_resnet', 'resnext'):
+        raise ValueError('SLA head requires preact_resnet or resnext')
     if bool(t.get('sla', False)) != bool(m.get('sla_head', False)):
         raise ValueError('Enable training.sla and model.sla_head together')
     if t.get('sla', False) and (a['mixup_alpha'] or weight or m.get('rotation_head', False)):

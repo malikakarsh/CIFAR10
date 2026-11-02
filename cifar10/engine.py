@@ -372,7 +372,7 @@ def predict(checkpoint_path, output, data_root=None, device_name='auto', tta=Non
     predictions = {}
     for images, ids in loader(ImageDataset(rows, config, test=True), config):
         images = images.to(device)
-        if config['model'].get('architecture') == 'preact_resnet' or use_translation:
+        if config['model'].get('architecture') in ('preact_resnet', 'resnext') or use_translation:
             probabilities = inference_probabilities(model, images, use_tta,
                 use_translation, rotation_vote)
         else:

@@ -48,7 +48,10 @@ def build_model(config):
     options = dict(config)
     limit = min(options.pop('max_parameters'), 5_000_000)
     architecture = options.pop('architecture', 'resnet')
-    if architecture == 'preact_resnet':
+    if architecture == 'resnext':
+        from .resnext import GroupedResNet
+        model = GroupedResNet(**options)
+    elif architecture == 'preact_resnet':
         from .sla import PreActResNet
         model = PreActResNet(**options)
     elif architecture == 'attention_resnet':

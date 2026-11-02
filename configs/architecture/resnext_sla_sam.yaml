@@ -1,0 +1,11 @@
+# Only architecture changes from the verified 91.20% SLA+SD+SAM recipe.
+extends: ../robustness/sla_sam.yaml
+experiment:
+  name: resnext29_8x14_sla_sam600
+  output_dir: runs_hpc/resnext_sla_sam
+model:
+  architecture: resnext
+  blocks: [3, 3, 3]
+  channels: [64, 128, 256]
+  groups: 8
+  base_width: 14

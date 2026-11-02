@@ -263,6 +263,12 @@ Completed checkpoints should be compared on the same held-out images with the sa
 
 ## Configuration and checkpoints
 
+### Next bounded architecture trial
+
+The requested additional 15-hour allocation prepares **one ResNeXt-style 29-layer grouped CNN + SLA+SD+SAM360 experiment**, with **4,942,098 parameters** including both heads. It preserves the verified 91.20% model's training objective, optimizer, float32 precision, original augmentation, 45k/5k split, and seed. After the first A100 epoch measured approximately 140 seconds, the user selected a complete **360-epoch** cosine schedule (about **14 hours** of training). The change is the grouped bottleneck backbone: eight groups and base width 14. This independently implemented architecture follows the [ResNeXt paper](https://arxiv.org/abs/1611.05431); its accuracy in this competition is untested.
+
+`scripts/run_resnext_sla_sam.py` verifies the recipe and split, resumes saved epochs, and caps training at 14 hours by default before exporting completed or explicitly partial results. This leaves export buffer within a 15-hour allocation; the 360-epoch restart uses a 14.15-hour cap and automatically publishes the best-checkpoint CSV, PNG/PDF curves and archive to `exports/resnext360_results/` for download through Burst Files. The timing margin depends on allocation time remaining and later epoch speed. Parameter checks, joint-head gradients/inference, exact CPU SAM/SLA resume and deadline handling are tested. [Architecture, rationale, HPC upload/launch, deadline and export instructions](docs/resnext_architecture_trial.md).
+
 Architecture, optimizer, augmentation, and scheduling settings are defined in [configs/base.yaml](configs/base.yaml) and inherited by experiment presets. Override them without editing code:
 
 ```bash
@@ -292,7 +298,7 @@ python -m cifar10 report --runs runs --readme README.md
 python -m unittest discover -s tests -v
 ```
 
-**53 tests passed at the latest code verification**, covering data loading, parameter limits, checkpoint resume, submission formatting, HPC launcher arguments, stage generation, attention models, RAM caching, SLA joint-label alignment, detached self-distillation targets, head gradients, prediction augmentation, checkpoint inference, SAM analytical updates, BatchNorm handling, exact SAM resume, queue locking, and priority-before-original queue ordering. SAM and SLA600 CUDA results are verified from imported checkpoints, configs, summaries, and 600-epoch histories; public scores come from user-provided screenshots. CSV IDs, labels, order, and hashes have been verified.
+**61 tests passed at the latest code verification**, covering data loading, parameter limits, checkpoint resume, submission formatting, HPC launcher arguments, stage generation, attention models, RAM caching, SLA joint-label alignment, detached self-distillation targets, head gradients, prediction augmentation, checkpoint inference, SAM analytical updates, BatchNorm handling, exact SAM resume, queue locking, and priority-before-original queue ordering. SAM and SLA600 CUDA results are verified from imported checkpoints, configs, summaries, and 600-epoch histories; public scores come from user-provided screenshots. CSV IDs, labels, order, and hashes have been verified.
 
 To generate learning curves:
 
