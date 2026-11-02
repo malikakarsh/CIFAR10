@@ -45,6 +45,17 @@ class ExtensionTests(unittest.TestCase):
         self.assertAlmostEqual(engine.epoch_lr(extended, 604), .01)
         self.assertAlmostEqual(engine.epoch_lr(extended, 799), 0.)
 
+    def test_selected_checkpoint_requires_explicit_permission_and_matching_epoch(self):
+        original, extended = self.configs()
+        extended['scheduler']['restart_epoch'] = 588
+        state = {'config': original, 'epoch': 587, 'best_metrics': {'epoch': 588}}
+        with self.assertRaisesRegex(ValueError, 'completed run'):
+            engine.validate_extension(state, extended)
+        engine.validate_extension(state, extended, allow_selected_checkpoint=True)
+        state['best_metrics']['epoch'] = 580
+        with self.assertRaisesRegex(ValueError, 'best-metrics epoch'):
+            engine.validate_extension(state, extended, allow_selected_checkpoint=True)
+
     def test_extension_preserves_momentum_source_and_exact_branch_resume(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -59,7 +70,16 @@ class ExtensionTests(unittest.TestCase):
                 'data.num_workers=0', 'training.device=cpu', 'training.epochs=2',
                 'scheduler.warmup_epochs=0', 'training.batch_size=10',
                 'model.blocks=[1]', 'model.channels=[4]', 'training.amp=false'])
-            original = engine.train(config)
+            save_original = engine.atomic_save
+            early = root / 'selected_first_epoch.pt'
+
+            def capture_original(value, path):
+                save_original(value, path)
+                if path.name == 'last.pt' and value['epoch'] == 0:
+                    shutil.copyfile(path, early)
+
+            with patch('cifar10.engine.atomic_save', capture_original):
+                original = engine.train(config)
             source = Path(original['last_checkpoint'])
             checksum = hashlib.sha256(source.read_bytes()).hexdigest()
             state = torch.load(source, weights_only=True)
@@ -93,6 +113,14 @@ class ExtensionTests(unittest.TestCase):
             actual = torch.load(repeated['last_checkpoint'], weights_only=True)
             for key, value in completed['model'].items():
                 self.assertTrue(torch.equal(value, actual['model'][key]), key)
+            selected_hash = hashlib.sha256(early.read_bytes()).hexdigest()
+            selected = engine.extend_training(early, 4, .01, 1, root / 'from_selected',
+                                              allow_selected_checkpoint=True)
+            selected_state = torch.load(selected['last_checkpoint'], weights_only=True)
+            self.assertEqual(selected_state['config']['scheduler']['restart_epoch'], 1)
+            self.assertEqual(selected_state['epoch'] + 1, 4)
+            self.assertIn('_from1', selected_state['config']['experiment']['name'])
+            self.assertEqual(hashlib.sha256(early.read_bytes()).hexdigest(), selected_hash)
 
 
 if __name__ == '__main__':

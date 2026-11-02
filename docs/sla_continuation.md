@@ -39,6 +39,18 @@ After interruption, use the new branch's saved config and `last.pt` with `train 
 
 At the earlier A100 rate of about 20 seconds per epoch, 200 extra epochs are roughly 67 minutes plus loading/checkpoint overhead. This is an estimate; actual runtime and generalization need measurement. Reject the extension as a replacement if it does not improve held-out validation; preserve the existing 90.10% submission regardless.
 
+## Requested exact-checkpoint branch (not yet trained)
+
+The user separately requested continuing the exact epoch-588 `best.pt` submitted for 90.10%. `scripts/run_best588_extension.py` checks its SHA-256 against the verified submission checkpoint, waits for known active training locks, then trains epochs 589–800 using the original recipe and a 212-epoch restarted schedule (peak LR 0.001, five warmup epochs, cosine decay). The source weights and original 45k/5k split are preserved, with new results under `runs_hpc/sla_best588_extend800`. It resumes matching partial branch checkpoints and skips a completed branch. If the allocation expires while waiting or training, rerun it in the next allocation.
+
+```bash
+nohup python -u scripts/run_best588_extension.py --project "$PWD" \
+  > runs_hpc/best588_extension.log 2>&1 &
+tail -f runs_hpc/best588_extension.log
+```
+
+The new core code must be uploaded first. Low-level branching from a selected checkpoint requires the explicit `extend --from-selected-checkpoint` option; default extension still requires a completed source, and normal resume still requires an unchanged config. This is a separate hypothesis from continuing epoch 600, not an established remedy for the public accuracy gap.
+
 ## A method change prepared separately: SAM + SLA
 
 `configs/robustness/plan.yaml` compares a float32 SLA600 control with an otherwise identical float32 SLA600 + SAM (rho 0.05). Both contain 4,706,674 trainable parameters and use the original 45k/5k split. The SAM implementation evaluates the FULL SLA loss on both passes, including a newly computed detached self-distillation target on each pass, restores original weights before the SGD update, and avoids duplicate BatchNorm buffer updates. This is an independently implemented combination of [SAM](https://arxiv.org/abs/2010.01412) and [SLA](https://arxiv.org/abs/1910.05872), not a claim that either paper guarantees their combined benefit.

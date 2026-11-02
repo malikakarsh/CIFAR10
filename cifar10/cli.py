@@ -75,14 +75,17 @@ def report(run_root, readme):
 def main():
     parser = argparse.ArgumentParser(description='CIFAR-10 ResNet experiment lab')
     commands = parser.add_subparsers(dest='command', required=True)
-    p = commands.add_parser('extend', help='Continue a completed run with preserved state and an explicit LR restart')
-    p.add_argument('--checkpoint', required=True, help='Completed source last.pt, not best.pt')
+    p = commands.add_parser('extend', help='Branch from saved training state with an explicit LR restart')
+    p.add_argument('--checkpoint', required=True,
+                   help='Completed last.pt; selected best.pt requires --from-selected-checkpoint')
     p.add_argument('--epochs', type=int, required=True, help='New total epoch count, e.g. 800 after 600')
     p.add_argument('--restart-lr', type=float, default=0.001)
     p.add_argument('--warmup-epochs', type=int, default=5)
     p.add_argument('--output-dir', default='runs_hpc/sla_continuation')
     p.add_argument('--device')
     p.add_argument('--data-root')
+    p.add_argument('--from-selected-checkpoint', action='store_true',
+                   help='Explicitly branch from a selected best checkpoint before the original final epoch')
     for name in ('inspect', 'train', 'sweep', 'check-data'):
         p = commands.add_parser(name)
         p.add_argument('--config', required=True)
@@ -117,7 +120,8 @@ def main():
     if args.command == 'extend':
         from .engine import extend_training
         extend_training(args.checkpoint, args.epochs, args.restart_lr, args.warmup_epochs,
-                        args.output_dir, args.device, args.data_root)
+                        args.output_dir, args.device, args.data_root,
+                        allow_selected_checkpoint=args.from_selected_checkpoint)
     elif args.command == 'prepare-stage':
         from .stages import prepare_stage
         prepare_stage(args.source, args.stage, args.output_dir)

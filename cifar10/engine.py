@@ -115,13 +115,17 @@ def evaluate(model, batches, device, progress_label=None):
     return {'loss': loss_sum / count, 'accuracy': correct / count}
 
 
-def validate_extension(checkpoint, config):
+def validate_extension(checkpoint, config, allow_selected_checkpoint=False):
     if checkpoint is None:
         raise ValueError('Extension requires a completed source checkpoint')
     old = checkpoint['config']
     completed = checkpoint['epoch'] + 1
-    if completed != old['training']['epochs'] or config['training']['epochs'] <= completed:
+    if config['training']['epochs'] <= completed or completed > old['training']['epochs']:
+        raise ValueError('New total epoch budget must exceed the source epoch')
+    if completed != old['training']['epochs'] and not allow_selected_checkpoint:
         raise ValueError('Extend from last.pt of a completed run to a larger total epoch budget')
+    if allow_selected_checkpoint and (checkpoint.get('best_metrics') or {}).get('epoch') != completed:
+        raise ValueError('Selected source must be its recorded best-metrics epoch')
     if config['scheduler'].get('restart_epoch') != completed:
         raise ValueError('Extension schedule must restart at the completed source epoch')
     expected = deepcopy(old)
@@ -136,11 +140,14 @@ def validate_extension(checkpoint, config):
 
 
 def extend_training(checkpoint_path, total_epochs, restart_lr=.001, warmup_epochs=5,
-                    output_dir='runs_hpc/sla_continuation', device_name=None, data_root=None):
+                    output_dir='runs_hpc/sla_continuation', device_name=None, data_root=None,
+                    allow_selected_checkpoint=False):
     checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=True)
     config = deepcopy(checkpoint['config'])
     config['experiment'].update(name=config['experiment']['name'] + f'_extend{total_epochs}',
                                 output_dir=str(output_dir))
+    if allow_selected_checkpoint:
+        config['experiment']['name'] += f'_from{checkpoint["epoch"] + 1}'
     config['training']['epochs'] = total_epochs
     if device_name:
         config['training']['device'] = device_name
@@ -150,14 +157,15 @@ def extend_training(checkpoint_path, total_epochs, restart_lr=.001, warmup_epoch
     config['scheduler'].update(name='cosine', warmup_epochs=warmup_epochs, min_lr=0.,
                                restart_epoch=checkpoint['epoch'] + 1)
     validate(config)
-    validate_extension(checkpoint, config)
-    return train(config, resume=checkpoint_path, extension=True)
+    validate_extension(checkpoint, config, allow_selected_checkpoint)
+    return train(config, resume=checkpoint_path, extension=True,
+                 allow_selected_checkpoint=allow_selected_checkpoint)
 
 
-def train(config, resume=None, extension=False):
+def train(config, resume=None, extension=False, allow_selected_checkpoint=False):
     checkpoint = torch.load(resume, map_location='cpu', weights_only=True) if resume else None
     if extension:
-        validate_extension(checkpoint, config)
+        validate_extension(checkpoint, config, allow_selected_checkpoint)
     elif checkpoint:
         if checkpoint['config'] != config:
             raise ValueError("Resume requires the saved config unchanged. Start a new run for new settings.")

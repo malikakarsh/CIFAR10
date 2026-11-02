@@ -1,6 +1,6 @@
 # Validation and public submission gap
 
-The strongest reported public result remains SLA600 at **90.10%**. The fresh 49k/1k SLA800 scored **89.60%**. It changed both the epoch budget and validation split; it did not continue the original SLA600 weights.
+The strongest reported public result is now **SLA+SD+SAM600 at 91.20%**, improving on original SLA600 at **90.10%**. Its imported epoch-598 checkpoint records 98.26% validation accuracy and 0.0986498 loss on the original 5k split. The historical audit below predates that result. [Verified submission](sla_sam600_submission.json). The fresh 49k/1k SLA800 scored **89.60%**. It changed both the epoch budget and validation split; it did not continue the original SLA600 weights.
 
 ## Checks completed locally
 
