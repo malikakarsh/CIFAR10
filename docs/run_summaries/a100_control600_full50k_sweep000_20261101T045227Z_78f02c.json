@@ -1,0 +1,21 @@
+{
+  "run": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/a100_experiments/a100_control600_full50k_sweep000_20261101T045227Z_78f02c",
+  "name": "a100_control600_full50k_sweep000",
+  "parameters": 4696394,
+  "epochs_completed": 600,
+  "best_metrics": null,
+  "final_metrics": {
+    "epoch": 600,
+    "lr": 0.0,
+    "train_loss": 0.6407927679634094,
+    "train_accuracy_mixup_weighted": 0.93832,
+    "val_loss": null,
+    "val_accuracy": null,
+    "seconds": 13.50845347699942
+  },
+  "split_sha256": "9e50ecfe3dbc39a13ccbbfb1fc5e13bd05d8fe541844bb0b2c53f683532f8033",
+  "device": "cuda",
+  "best_val_accuracy": null,
+  "best_checkpoint": null,
+  "last_checkpoint": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/a100_experiments/a100_control600_full50k_sweep000_20261101T045227Z_78f02c/last.pt"
+}

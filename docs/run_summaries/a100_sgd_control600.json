@@ -1,0 +1,9 @@
+{
+  "name": "a100_sgd_control_sweep000",
+  "epochs_completed": 600,
+  "best_epoch": 575,
+  "validation_accuracy": 0.9738,
+  "validation_loss": 0.17251155807971955,
+  "parameters": 4696394,
+  "artifacts_verified": false
+}

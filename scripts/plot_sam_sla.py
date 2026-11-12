@@ -19,8 +19,8 @@ def main():
         return [sum(values[max(0, i-9):i+1]) / min(i+1, 10) for i in range(len(values))]
 
     for column, (tag, title) in enumerate([('sam600', 'SAM'), ('sla600', 'SLA+SD')]):
-        record = json.loads((root / f'docs/{tag}_submission.json').read_text())
-        with (root / f'docs/figures/{tag}/metrics_snapshot.csv').open() as handle:
+        record = json.loads((root / f'docs/run_summaries/submissions/{tag}_submission.json').read_text())
+        with (root / f'plots/{tag}/metrics_snapshot.csv').open() as handle:
             rows = [{key: float(value) for key, value in r.items()} for r in csv.DictReader(handle)]
         epochs = [r['epoch'] for r in rows]
         loss_axis, accuracy_axis = axes[:, column]
@@ -35,7 +35,7 @@ def main():
             axis.set_xlabel('Epoch')
             axis.grid(alpha=.15)
             axis.legend(frameon=False, fontsize=9)
-        loss_axis.set_title(f'{title} | Public Kaggle {record["public_accuracy_reported"]:.2%}',
+        loss_axis.set_title(f'{title} | Public Kaggle {record["public_accuracy"]:.2%}',
                             loc='left', weight='bold')
         loss_axis.set_ylabel('Loss')
         loss_axis.set_ylim(bottom=0)
@@ -50,7 +50,7 @@ def main():
     figure.suptitle('SAM and SLA+SD: 600 epochs on A100\n'
                    'Thin: per-epoch metrics; bold: trailing 10-epoch means', fontsize=14, weight='bold')
     for extension in ['png', 'pdf']:
-        output = root / f'docs/figures/sam_sla600_comparison.{extension}'
+        output = root / f'plots/sam_sla600_comparison.{extension}'
         figure.savefig(output, dpi=160)
         print(output)
     plt.close(figure)

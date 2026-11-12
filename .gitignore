@@ -22,5 +22,69 @@ exports/
 best_sub/
 *.pt
 *.pth
+# Model weights and exported checkpoints, at any directory depth.
+*.ckpt
+*.safetensors
+*.onnx
+*.h5
+*.hdf5
+*.weights
+*.weights.*
+*.pt.*
+*.pth.*
+*.ckpt.*
+*.safetensors.*
+*.pt-*
+*.pth-*
+*.bin
 .env
 kaggle.json
+
+# Local datasets and independent experiments
+/cifar-10-batches-py/
+/check_v4_v6/
+/synthetic_ds/
+/synthetic_ds.extracting/
+/synthetic_ds_final/
+/synthetic_ds_final.preparing/
+/ds_submission/
+/ds_submission.preparing/
+/ds_submission117/
+/ds_submission117.preparing/
+/runs_local_overlap*/
+
+# Local experiment tools, notes, and their tests
+/scripts/create_label_noise_submissions.py
+/scripts/predict_resnet200_axi.py
+/scripts/prepare_ds_submission.py
+/scripts/prepare_ds_submission117.py
+/scripts/prepare_synthetic_ds.py
+/scripts/prepare_synthetic_final.py
+/scripts/submission_from_cifar102.py
+/scripts/train_ds_submission.py
+/scripts/train_ds_submission117.py
+/scripts/train_local_overlap.py
+/scripts/train_resnet200_axi.py
+/scripts/train_sla_sam_600_axi.py
+/scripts/train_synthetic_final.py
+/docs/ds_submission.md
+/docs/ds_submission117.md
+/docs/local_overlap_experiment.md
+/tests/test_local_artifacts.py
+/tests/test_submission_dataset.py
+
+# Generated submissions and comparisons in the repository root
+/submission*.csv
+/submission*.csv.zip
+/submission*.json
+/submission_backups/
+
+# Private report, assignment handout, and intermediate artifacts
+/output/
+/tmp/
+/project1_guidelines.pdf
+
+# Keep repository documentation consolidated under the main README and results.
+/docs/*
+!/docs/run_summaries/
+!/docs/run_summaries/**

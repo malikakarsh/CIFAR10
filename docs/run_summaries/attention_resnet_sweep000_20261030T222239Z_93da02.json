@@ -1,0 +1,29 @@
+{
+  "run": "runs_attention/attention_resnet_sweep000_20261030T222239Z_93da02",
+  "name": "attention_resnet_sweep000",
+  "parameters": 4534066,
+  "epochs_completed": 85,
+  "best_metrics": {
+    "epoch": 85,
+    "lr": 0.08323439626147695,
+    "train_loss": 0.840907563993666,
+    "train_accuracy_mixup_weighted": 0.7797111111111111,
+    "val_loss": 0.30792350006103514,
+    "val_accuracy": 0.9086,
+    "seconds": 71.00400416599587
+  },
+  "final_metrics": {
+    "epoch": 85,
+    "lr": 0.08323439626147695,
+    "train_loss": 0.840907563993666,
+    "train_accuracy_mixup_weighted": 0.7797111111111111,
+    "val_loss": 0.30792350006103514,
+    "val_accuracy": 0.9086,
+    "seconds": 71.00400416599587
+  },
+  "split_sha256": "e1cd84e0fb89207784f8201521e459da9009274428d78dfa70a84b5d19ff240e",
+  "device": "mps",
+  "best_val_accuracy": 0.9086,
+  "best_checkpoint": "/Users/akarsh/Documents/projects/fastInfer/CIFAR-10/runs_attention/attention_resnet_sweep000_20261030T222239Z_93da02/best.pt",
+  "last_checkpoint": "/Users/akarsh/Documents/projects/fastInfer/CIFAR-10/runs_attention/attention_resnet_sweep000_20261030T222239Z_93da02/last.pt"
+}

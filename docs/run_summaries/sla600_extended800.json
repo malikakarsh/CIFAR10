@@ -1,0 +1,26 @@
+{
+  "run": "runs_hpc/sla600_extend800/a100_sla600_sweep000_extend800_20261101T144002Z_9ac3f5",
+  "epochs_completed": 800,
+  "parameters": 4706674,
+  "best_metrics": {
+    "epoch": 748,
+    "lr": 0.00016543923198989214,
+    "train_loss": 1.0312468861473931,
+    "train_accuracy_mixup_weighted": 0.9546666666666667,
+    "val_loss": 0.10756634736061096,
+    "val_accuracy": 0.9798,
+    "seconds": 20.121432680999987
+  },
+  "final_metrics": {
+    "epoch": 800,
+    "val_loss": 0.1097855616569519,
+    "val_accuracy": 0.979
+  },
+  "submission": "submission_sla600_extended800_tta.csv",
+  "public_accuracy": 0.894,
+  "original_sla600_public_accuracy": 0.901,
+  "public_change_percentage_points": -0.7,
+  "source": "User-pasted HPC summary and Kaggle screenshot naming the submission",
+  "local_artifacts_verified": false,
+  "conclusion": "Continuation improved selected validation accuracy by 0.12 percentage points but reduced public accuracy by 0.70 points. Preserve the original SLA600 submission."
+}

@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "run_summaries": [
+    {
+      "name": "resnet_adamw_sweep000",
+      "file": "resnet_adamw_sweep000_20261030T004636Z_9ef608.json",
+      "source": "runs/resnet_adamw_sweep000_20261030T004636Z_9ef608/summary.json",
+      "sha256": "efdea2731fb322da6a29352de5bc9b6464114da39ff6ebdd6bbe37fb2c4f7a70"
+    },
+    {
+      "name": "resnet_adamw_sweep001",
+      "file": "resnet_adamw_sweep001_20261030T042040Z_96b2b8.json",
+      "source": "runs/resnet_adamw_sweep001_20261030T042040Z_96b2b8/summary.json",
+      "sha256": "0aa52018c797032024333a5b8159a5cd939ab2bf309990c81a414b2d05363c8b"
+    },
+    {
+      "name": "resnet_adamw_sweep002",
+      "file": "resnet_adamw_sweep002_20261030T090056Z_cb3d4a.json",
+      "source": "runs/resnet_adamw_sweep002_20261030T090056Z_cb3d4a/summary.json",
+      "sha256": "53b8bc506e46e98a9483e217ff942b639a1734755f1e0e95ebfe127497603819"
+    },
+    {
+      "name": "resnet_adamw_sweep003",
+      "file": "resnet_adamw_sweep003_20261030T155237Z_d51182.json",
+      "source": "runs/resnet_adamw_sweep003_20261030T155237Z_d51182/summary.json",
+      "sha256": "524379f629d5c77e8375798d48b5d196da7beb6b3c2814c5165bacddee1d9711"
+    },
+    {
+      "name": "resnet_baseline_sweep000",
+      "file": "resnet_baseline_sweep000_20261029T224315Z_18e3b7.json",
+      "source": "runs/resnet_baseline_sweep000_20261029T224315Z_18e3b7/summary.json",
+      "sha256": "c16a74737c8e192cca0f8d89162a3cd1fc4778e2a64af70774edddaa1434a43b"
+    },
+    {
+      "name": "resnet_baseline_sweep001",
+      "file": "resnet_baseline_sweep001_20261030T021545Z_95e1c4.json",
+      "source": "runs/resnet_baseline_sweep001_20261030T021545Z_95e1c4/summary.json",
+      "sha256": "f59e623c654d95d2a4fcfaa628b283b7923e2278b1812f4449c8d07dc50d038c"
+    },
+    {
+      "name": "resnet_baseline_sweep002",
+      "file": "resnet_baseline_sweep002_20261030T062258Z_e7998b.json",
+      "source": "runs/resnet_baseline_sweep002_20261030T062258Z_e7998b/summary.json",
+      "sha256": "4a1723b1ea1388341037f1cdbbc7e797e005ebaee78a5fec5ac1d2da067c8842"
+    },
+    {
+      "name": "resnet_baseline_sweep003",
+      "file": "resnet_baseline_sweep003_20261030T114542Z_9bc762.json",
+      "source": "runs/resnet_baseline_sweep003_20261030T114542Z_9bc762/summary.json",
+      "sha256": "1a125b031f96ed4180eeb8374c3f57d169e0ef98c9edf35e915e6a4baf612125"
+    },
+    {
+      "name": "attention_resnet_sweep000",
+      "file": "attention_resnet_sweep000_20261030T222239Z_93da02.json",
+      "source": "runs_attention/attention_resnet_sweep000_20261030T222239Z_93da02/summary.json",
+      "sha256": "b3273ee5345bdaf4b56839e1975db1521628893a76ec20ab039c4b6a62978cb3"
+    },
+    {
+      "name": "attention_resnet_sweep000",
+      "file": "attention_resnet_sweep000_20261031T010937Z_0965c7.json",
+      "source": "runs_attention/attention_resnet_sweep000_20261031T010937Z_0965c7/summary.json",
+      "sha256": "2bb4a79d7e4e29870d82b9a0ff0c5cf0831285745b888107cc661aff040b00d6"
+    },
+    {
+      "name": "attention_resnet_sweep000",
+      "file": "attention_resnet_sweep000_20261031T025638Z_303819.json",
+      "source": "runs_attention/attention_resnet_sweep000_20261031T025638Z_303819/summary.json",
+      "sha256": "cd9a0daec37c4e8ea3274d5a915d88ff73be00cda90188f1cb53be951655167a"
+    },
+    {
+      "name": "preact_control_sweep000",
+      "file": "preact_control_sweep000_20261031T071758Z_ed2534.json",
+      "source": "runs_sla/preact_control_sweep000_20261031T071758Z_ed2534/summary.json",
+      "sha256": "5bd20eb8f5f417536d6ce9526b92bc62990ec2d0030d5e8b172539871c7de2d0"
+    },
+    {
+      "name": "preact_sla_sd_sweep000",
+      "file": "preact_sla_sd_sweep000_20261031T144006Z_d7d585.json",
+      "source": "runs_sla/preact_sla_sd_sweep000_20261031T144006Z_d7d585/summary.json",
+      "sha256": "aa2170a2a5f340f50f143e38711e1d4807acccb242ab90315a0d26ebe741248a"
+    },
+    {
+      "name": "sla800_49k_val1k_sweep000",
+      "file": "sla800_49k_val1k_sweep000_20261101T072329Z_706456.json",
+      "source": "runs_hpc/a100_800_val1k/sla800_49k_val1k_sweep000_20261101T072329Z_706456/summary.json",
+      "sha256": "06a24fa26aaebd8c1b797409e08ef125a0f73299e4f5e4328bc2758c6273e8bb"
+    },
+    {
+      "name": "a100_control600_full50k_sweep000",
+      "file": "a100_control600_full50k_sweep000_20261101T045227Z_78f02c.json",
+      "source": "runs_hpc/a100_experiments/a100_control600_full50k_sweep000_20261101T045227Z_78f02c/summary.json",
+      "sha256": "95ec93917e583fd03f03a407082c31def61ced17ffc305e3a55f5f962c18f37b"
+    },
+    {
+      "name": "a100_sam005_sweep000",
+      "file": "a100_sam005_sweep000_20261031T221410Z_7710c7.json",
+      "source": "runs_hpc/a100_experiments/a100_sam005_sweep000_20261031T221410Z_7710c7/summary.json",
+      "sha256": "dceabda53351fffa85fd43dfc916354895594cde13cae99b1338302a6be79346"
+    },
+    {
+      "name": "a100_sla600_sweep000",
+      "file": "a100_sla600_sweep000_20261101T013008Z_62b447.json",
+      "source": "runs_hpc/a100_experiments/a100_sla600_sweep000_20261101T013008Z_62b447/summary.json",
+      "sha256": "255f7e439335b7042176ec5abc5286f43e089a3dc8ea23549466a20bd57cba0c"
+    },
+    {
+      "name": "attention_resnet600_sweep000",
+      "file": "attention_resnet600_sweep000_20261031T174911Z_744138.json",
+      "source": "runs_hpc/attention600/attention_resnet600_sweep000_20261031T174911Z_744138/summary.json",
+      "sha256": "bb7bb0c7dede01cc3e0ed8d17b3a8ea92d96bc87f61968d6f6661cf93b8a4a5e"
+    },
+    {
+      "name": "sla_sam005_600_sweep000",
+      "file": "sla_sam005_600_sweep000_20261101T154821Z_411960.json",
+      "source": "runs_hpc/robustness/sla_sam005_600_sweep000_20261101T154821Z_411960/summary.json",
+      "sha256": "6c38ee795795e906ab3ce6cf3a466dabdd09dace5769a6af84d7c0ce4b7ccbc6"
+    },
+    {
+      "name": "local300_control_sweep000",
+      "file": "local300_control_sweep000_20261030T220547Z_bfeccb.json",
+      "source": "runs_local300/local300_control_sweep000_20261030T220547Z_bfeccb/summary.json",
+      "sha256": "a75a710480dff118421ab374aa139e08b7d87fe508aafe7fc79c476cf9ffdff4"
+    }
+  ],
+  "additional_runs": [
+    {
+      "name": "a100_sgd_control600",
+      "file": "a100_sgd_control600.json",
+      "source_record": "source_results/a100_results.json",
+      "source_pointer": "/results/0"
+    },
+    {
+      "name": "sam800_49k_val1k",
+      "file": "sam800_49k_val1k.json",
+      "source_record": "source_results/a100_800_val1k_results.json",
+      "source_pointer": "/sam800_interrupted"
+    },
+    {
+      "name": "sla600_extended800",
+      "file": "sla600_extended800.json",
+      "source_record": "source_results/sla600_extension_results.json",
+      "source_pointer": ""
+    },
+    {
+      "name": "sla_sam_randaugment600",
+      "file": "sla_sam_randaugment600.json",
+      "source_record": "source_results/sla_sam_two_trial_results.json",
+      "source_pointer": "/randaugment"
+    },
+    {
+      "name": "sla_sam_best598_extended700",
+      "file": "sla_sam_best598_extended700.json",
+      "source_record": "source_results/sla_sam_two_trial_results.json",
+      "source_pointer": "/continuation"
+    }
+  ],
+  "public_submissions": "public_submissions.json",
+  "submission_records": [
+    "submissions/attention600_submission.json",
+    "submissions/attention_final_submission.json",
+    "submissions/attention_submission.json",
+    "submissions/control600_full50k_submission.json",
+    "submissions/preact_control_submission.json",
+    "submissions/sam600_submission.json",
+    "submissions/sla600_submission.json",
+    "submissions/sla800_submission.json",
+    "submissions/sla_sam600_submission.json"
+  ],
+  "figure_statistics": [
+    "statistics/attention600.json",
+    "statistics/preact_control_sweep000_20261031T071758Z_ed2534.json",
+    "statistics/sam600.json",
+    "statistics/sla600.json",
+    "statistics/sla_sam600.json"
+  ],
+  "experiments_without_run_summaries": [
+    {
+      "name": "Exact epoch-588 SLA continuation",
+      "entrypoint": "../../scripts/run_best588_extension.py"
+    },
+    {
+      "name": "Standalone SLA with RandAugment",
+      "config": "../../configs/robustness/sla_randaugment.yaml"
+    },
+    {
+      "name": "Matched float32 SLA control",
+      "config": "../../configs/robustness/sla_fp32.yaml"
+    },
+    {
+      "name": "A100 channel-attention variation",
+      "config": "../../configs/hpc_a100/channel_attention_sweep.yaml"
+    },
+    {
+      "name": "A100 mixup variation",
+      "config": "../../configs/hpc_a100/mixup_sweep.yaml"
+    },
+    {
+      "name": "A100 RandAugment variation",
+      "config": "../../configs/hpc_a100/randaugment_sweep.yaml"
+    },
+    {
+      "name": "A100 second-seed variation",
+      "config": "../../configs/hpc_a100/seed_sweep.yaml"
+    },
+    {
+      "name": "ResNeXt SLA+SD+SAM360",
+      "entrypoint": "../../scripts/run_resnext_sla_sam.py"
+    }
+  ],
+  "models": [
+    {
+      "name": "final_sla_sam600",
+      "file": "final_sla_sam600.json",
+      "reference_summary": "sla_sam005_600_sweep000_20261101T154821Z_411960.json",
+      "checkpoint_weights_included": false
+    }
+  ]
+}

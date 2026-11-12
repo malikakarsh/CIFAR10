@@ -1,0 +1,29 @@
+{
+  "run": "runs_local300/local300_control_sweep000_20261030T220547Z_bfeccb",
+  "name": "local300_control_sweep000",
+  "parameters": 2436346,
+  "epochs_completed": 21,
+  "best_metrics": {
+    "epoch": 11,
+    "lr": 0.09992872335055573,
+    "train_loss": 0.42308840622372096,
+    "train_accuracy_mixup_weighted": 0.8549777777777777,
+    "val_loss": 0.47433405151367186,
+    "val_accuracy": 0.8452,
+    "seconds": 47.90029137500096
+  },
+  "final_metrics": {
+    "epoch": 21,
+    "lr": 0.0993597300815518,
+    "train_loss": 0.352892290714052,
+    "train_accuracy_mixup_weighted": 0.8798888888888889,
+    "val_loss": 0.498046475982666,
+    "val_accuracy": 0.8344,
+    "seconds": 48.013185416930355
+  },
+  "split_sha256": "e1cd84e0fb89207784f8201521e459da9009274428d78dfa70a84b5d19ff240e",
+  "device": "mps",
+  "best_val_accuracy": 0.8452,
+  "best_checkpoint": "/Users/akarsh/Documents/projects/fastInfer/CIFAR-10/runs_local300/local300_control_sweep000_20261030T220547Z_bfeccb/best.pt",
+  "last_checkpoint": "/Users/akarsh/Documents/projects/fastInfer/CIFAR-10/runs_local300/local300_control_sweep000_20261030T220547Z_bfeccb/last.pt"
+}

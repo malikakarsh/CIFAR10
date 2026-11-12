@@ -76,7 +76,10 @@ def epoch_lr(config, epoch):
         return base * (epoch + 1) / s['warmup_epochs']
     if s['name'] == 'constant':
         return base
-    progress = (epoch - s['warmup_epochs']) / max(1, total - s['warmup_epochs'] - 1)
+    if s.get('cosine_epoch_end', False):
+        progress = (epoch + 1 - s['warmup_epochs']) / (total - s['warmup_epochs'])
+    else:
+        progress = (epoch - s['warmup_epochs']) / max(1, total - s['warmup_epochs'] - 1)
     return s['min_lr'] + (base - s['min_lr']) * (1 + math.cos(math.pi * progress)) / 2
 
 

@@ -1,0 +1,32 @@
+{
+  "run": "runs_sla/preact_control_sweep000_20261031T071758Z_ed2534",
+  "epochs_plotted": 400,
+  "latest": {
+    "epoch": 400.0,
+    "lr": 0.0,
+    "train_loss": 0.6544171749750773,
+    "train_accuracy_mixup_weighted": 0.9318666666666666,
+    "val_loss": 0.1694261972427368,
+    "val_accuracy": 0.9722,
+    "seconds": 66.064073208021
+  },
+  "best_accuracy_epoch": {
+    "epoch": 389.0,
+    "lr": 0.00019123181609119745,
+    "train_loss": 0.6549296303537157,
+    "train_accuracy_mixup_weighted": 0.9323555555555556,
+    "val_loss": 0.1688933868408203,
+    "val_accuracy": 0.9726,
+    "seconds": 66.16069150005933
+  },
+  "lowest_validation_loss_epoch": {
+    "epoch": 384.0,
+    "lr": 0.0004043017478658206,
+    "train_loss": 0.6560974199930827,
+    "train_accuracy_mixup_weighted": 0.9320666666666667,
+    "val_loss": 0.16767441101074218,
+    "val_accuracy": 0.9708,
+    "seconds": 66.13961249997374
+  },
+  "source_metrics_sha256": "b8f46c63869b5b6b5e73dc613aaa553a3eb3248928347520989cf78ab25b811d"
+}

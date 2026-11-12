@@ -1,6 +1,6 @@
 """Pre-activation residual CNN with channel attention and an optional rotation task.
 
-Method references are documented in docs/attention_resnet.md. This module uses
+The architecture uses pre-activation residual blocks and channel attention. This module uses
 the project's own model interface; it does not load third-party model weights.
 """
 import torch

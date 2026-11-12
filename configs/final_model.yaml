@@ -1,0 +1,12 @@
+extends: robustness/sla_sam.yaml
+experiment:
+  name: final_sla_sam600
+  output_dir: runs_hpc/final_model
+model:
+  channels: [64, 128, 266]
+  rotation_head: true
+training:
+  rotation_weight: 0.0
+scheduler:
+  per_step: false
+  cosine_epoch_end: true

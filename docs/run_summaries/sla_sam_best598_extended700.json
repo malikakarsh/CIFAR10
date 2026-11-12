@@ -1,0 +1,10 @@
+{
+  "run": "runs_hpc/sla_sam_best598_extend700/sla_sam005_600_sweep000_extend700_from598_20261102T125545Z_683fce",
+  "epochs_completed": 700,
+  "selected_epoch": 598,
+  "selected_checkpoint_is_original_source": true,
+  "validation_accuracy": 0.9826,
+  "validation_loss": 0.09864976220130921,
+  "separate_public_score": null,
+  "conclusion": "No validation-accuracy improvement beyond the starting checkpoint; summary retains original epoch-598 best.pt."
+}

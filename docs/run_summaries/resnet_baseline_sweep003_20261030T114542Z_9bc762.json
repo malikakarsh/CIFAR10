@@ -1,0 +1,29 @@
+{
+  "run": "runs/resnet_baseline_sweep003_20261030T114542Z_9bc762",
+  "name": "resnet_baseline_sweep003",
+  "parameters": 4180858,
+  "epochs_completed": 200,
+  "best_metrics": {
+    "epoch": 195,
+    "lr": 0.0002636456667952599,
+    "train_loss": 0.0015707909622747038,
+    "train_accuracy_mixup_weighted": 0.9998888888888889,
+    "val_loss": 0.17610710468292237,
+    "val_accuracy": 0.9582,
+    "seconds": 98.10287216596771
+  },
+  "final_metrics": {
+    "epoch": 200,
+    "lr": 0.0001,
+    "train_loss": 0.0014400236732222968,
+    "train_accuracy_mixup_weighted": 0.9999555555555556,
+    "val_loss": 0.1774410943031311,
+    "val_accuracy": 0.9578,
+    "seconds": 99.11382591701113
+  },
+  "split_sha256": "e1cd84e0fb89207784f8201521e459da9009274428d78dfa70a84b5d19ff240e",
+  "device": "mps",
+  "best_val_accuracy": 0.9582,
+  "best_checkpoint": "/Users/akarsh/Documents/projects/fastInfer/CIFAR-10/runs/resnet_baseline_sweep003_20261030T114542Z_9bc762/best.pt",
+  "last_checkpoint": "/Users/akarsh/Documents/projects/fastInfer/CIFAR-10/runs/resnet_baseline_sweep003_20261030T114542Z_9bc762/last.pt"
+}

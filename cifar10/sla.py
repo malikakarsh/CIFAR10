@@ -1,7 +1,7 @@
 """Joint class/transformation labels and self-distillation (Lee et al., ICML 2020).
 
 All four views share one backbone. Layout is rotation-major, then sample-major;
-joint output index is class * 4 + rotation. See docs/sla.md for the objective.
+joint output index is class * 4 + rotation. See README.md for the objective.
 """
 import torch
 from torch import nn
@@ -11,9 +11,9 @@ from .attention_resnet import AttentionResNet
 
 class PreActResNet(AttentionResNet):
     def __init__(self, blocks, channels, kernel_size=3, dropout=0., num_classes=10,
-                 sla_head=False):
+                 sla_head=False, rotation_head=False):
         super().__init__(blocks, channels, kernel_size, dropout, num_classes,
-                         se_reduction=None)
+                         se_reduction=None, rotation_head=rotation_head)
         self.joint_classifier = nn.Linear(channels[-1], num_classes * 4) if sla_head else None
 
 

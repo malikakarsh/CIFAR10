@@ -1,0 +1,134 @@
+{
+  "run": "runs_hpc/final_sla_sam600",
+  "name": "final_sla_sam600",
+  "checkpoint_weights_included": false,
+  "parameters": 4956062,
+  "epochs_completed": 600,
+  "best_metrics": {
+    "epoch": 588,
+    "lr": 0.00010032820016302458,
+    "train_loss": 0.935838,
+    "train_accuracy_mixup_weighted": 0.9796444444444444,
+    "val_loss": 0.0862,
+    "val_accuracy": 0.9892,
+    "seconds": 442.0,
+    "train_joint_loss": 0.33822,
+    "train_distillation_loss": 0.040524,
+    "train_classification_loss": 0.557094
+  },
+  "final_metrics": {
+    "epoch": 600,
+    "lr": 0.0,
+    "train_loss": 0.943561,
+    "train_accuracy_mixup_weighted": 0.9795111111111111,
+    "val_loss": 0.088078,
+    "val_accuracy": 0.989,
+    "seconds": 441.8,
+    "train_joint_loss": 0.342571,
+    "train_distillation_loss": 0.041149,
+    "train_classification_loss": 0.559841
+  },
+  "split_sha256": "e1cd84e0fb89207784f8201521e459da9009274428d78dfa70a84b5d19ff240e",
+  "device": "cuda",
+  "best_val_accuracy": 0.9892,
+  "best_checkpoint": "runs_hpc/final_sla_sam600/best.pt",
+  "last_checkpoint": "runs_hpc/final_sla_sam600/last.pt",
+  "public_accuracy": 0.972,
+  "config": {
+    "experiment": {
+      "name": "final_sla_sam600",
+      "output_dir": "runs_hpc/final_model",
+      "seed": 42,
+      "deterministic": true
+    },
+    "data": {
+      "root": "dataset",
+      "train_csv": "train_labels.csv",
+      "test_csv": "test.csv",
+      "sample_submission": "sample_submission.csv",
+      "train_dir": "train_images",
+      "test_dir": "test_images",
+      "id_column": "id",
+      "label_column": "label",
+      "filename_column": "filename",
+      "filename_template": "{id}.png",
+      "val_fraction": 0.1,
+      "split_seed": 42,
+      "num_workers": 4,
+      "mean": [
+        0.4914,
+        0.4822,
+        0.4465
+      ],
+      "std": [
+        0.247,
+        0.2435,
+        0.2616
+      ],
+      "cache_images": true
+    },
+    "model": {
+      "blocks": [
+        4,
+        4,
+        3
+      ],
+      "channels": [
+        64,
+        128,
+        266
+      ],
+      "kernel_size": 3,
+      "dropout": 0.0,
+      "num_classes": 10,
+      "max_parameters": 5000000,
+      "architecture": "preact_resnet",
+      "sla_head": true,
+      "rotation_head": true
+    },
+    "augmentation": {
+      "crop_padding": 4,
+      "horizontal_flip": true,
+      "randaugment_ops": 0,
+      "randaugment_magnitude": 9,
+      "random_erasing": 0.0,
+      "mixup_alpha": 0.0,
+      "trivialaugment": true,
+      "trivialaugment_first": true,
+      "cutout_size": 12
+    },
+    "training": {
+      "epochs": 600,
+      "batch_size": 128,
+      "device": "cuda",
+      "amp": false,
+      "label_smoothing": 0.1,
+      "grad_clip": 0.0,
+      "sla": true,
+      "rotation_weight": 0.0
+    },
+    "optimizer": {
+      "name": "sgd",
+      "lr": 0.1,
+      "momentum": 0.9,
+      "nesterov": true,
+      "weight_decay": 0.0005,
+      "exclude_norm_bias_decay": true,
+      "sam_rho": 0.05
+    },
+    "scheduler": {
+      "name": "cosine",
+      "warmup_epochs": 5,
+      "min_lr": 0.0,
+      "per_step": false,
+      "cosine_epoch_end": true
+    },
+    "inference": {
+      "batch_size": 64,
+      "horizontal_flip_tta": true,
+      "translation_tta": true,
+      "rotation_vote": true
+    }
+  },
+  "config_file": "configs/final_model.yaml"
+}

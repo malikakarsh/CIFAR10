@@ -12,7 +12,7 @@ OPTIONAL = {
     'augmentation': {'trivialaugment', 'cutout_size', 'trivialaugment_first'},
     'training': {'rotation_weight', 'sla'},
     'inference': {'rotation_vote', 'translation_tta'},
-    'scheduler': {'per_step', 'restart_epoch'},
+    'scheduler': {'per_step', 'restart_epoch', 'cosine_epoch_end'},
     'optimizer': {'exclude_norm_bias_decay', 'sam_rho'},
 }
 
@@ -90,6 +90,11 @@ def validate(c):
         raise ValueError("warmup_epochs must be >= 0 and < epochs")
     if not 0 <= c['scheduler']['min_lr'] <= c['optimizer']['lr']:
         raise ValueError("min_lr must be between 0 and optimizer.lr")
+    epoch_end = c['scheduler'].get('cosine_epoch_end', False)
+    if type(epoch_end) is not bool:
+        raise ValueError('cosine_epoch_end must be a boolean')
+    if epoch_end and (c['scheduler']['name'] != 'cosine' or c['scheduler'].get('per_step', False)):
+        raise ValueError('cosine_epoch_end requires cosine decay with per_step=false')
     if a['mixup_alpha'] < 0 or not 0 <= a['random_erasing'] <= 1:
         raise ValueError("Invalid mixup_alpha or random_erasing")
     if m.get('architecture', 'resnet') not in ('resnet', 'attention_resnet', 'preact_resnet', 'resnext'):
@@ -115,7 +120,7 @@ def validate(c):
         raise ValueError('SLA head requires preact_resnet or resnext')
     if bool(t.get('sla', False)) != bool(m.get('sla_head', False)):
         raise ValueError('Enable training.sla and model.sla_head together')
-    if t.get('sla', False) and (a['mixup_alpha'] or weight or m.get('rotation_head', False)):
+    if t.get('sla', False) and (a['mixup_alpha'] or weight):
         raise ValueError('SLA requires unmixed labels and no auxiliary rotation task')
     if c['inference'].get('rotation_vote', False) and not m.get('sla_head', False):
         raise ValueError('Rotation voting requires an SLA head')

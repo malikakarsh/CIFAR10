@@ -1,0 +1,43 @@
+{
+  "checkpoint": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/a100_experiments/a100_sam005_sweep000_20261031T221410Z_7710c7/best.pt",
+  "checkpoint_epoch": 575,
+  "parameters": 4696394,
+  "rows": 2000,
+  "csv": "submissions/submission_sam600_tta.csv",
+  "csv_sha256": "91e159a803287d761a55bf0ed552331bf49687048962735eeb39320cc1f9d892",
+  "horizontal_flip_tta": true,
+  "translation_tta": true,
+  "rotation_vote": false,
+  "best_metrics": {
+    "epoch": 575,
+    "lr": 0.0004349699923151873,
+    "train_loss": 0.6565001006762187,
+    "train_accuracy_mixup_weighted": 0.9379555555555555,
+    "val_loss": 0.16169281017780304,
+    "val_accuracy": 0.9778,
+    "seconds": 19.061816314999305
+  },
+  "source_csv": "exports/sam_sla600_results/sam600/submission_sam600_tta.csv",
+  "local_run": "runs_hpc/a100_experiments/a100_sam005_sweep000_20261031T221410Z_7710c7",
+  "local_checkpoint": "runs_hpc/a100_experiments/a100_sam005_sweep000_20261031T221410Z_7710c7/best.pt",
+  "local_config": "runs_hpc/a100_experiments/a100_sam005_sweep000_20261031T221410Z_7710c7/config.yaml",
+  "local_summary": "runs_hpc/a100_experiments/a100_sam005_sweep000_20261031T221410Z_7710c7/summary.json",
+  "local_metrics": "runs_hpc/a100_experiments/a100_sam005_sweep000_20261031T221410Z_7710c7/metrics.csv",
+  "local_metadata": "submissions/submission_sam600_tta.metadata.json",
+  "checkpoint_sha256": "2e6db5d3958f5a25d87ab6ed04774a71590519e883984360ce985db2d26c6d70",
+  "public_accuracy": 0.896,
+  "public_score_source": "User-provided Kaggle screenshot naming submission_sam600_tta.csv",
+  "epochs_completed": 600,
+  "validation_accuracy": 0.9778,
+  "training_loss": 0.6565001006762187,
+  "validation_loss": 0.16169281017780304,
+  "local_csv_and_checkpoint_verification_pending": false,
+  "verified_against": [
+    "checkpoint state and epoch",
+    "saved config",
+    "parameter count and model state layout",
+    "600-epoch metrics and selected best epoch",
+    "CSV columns, IDs, order, labels and SHA-256",
+    "same validation split fingerprint as previous runs"
+  ]
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "submission": "Initial baseline submission during training",
+    "public_accuracy_percent": 79.5
+  },
+  {
+    "submission": "Completed baseline submission",
+    "public_accuracy_percent": 84.0
+  },
+  {
+    "submission": "Deeper + wider SGD submission",
+    "public_accuracy_percent": 85.3
+  },
+  {
+    "submission": "Attention ResNet control, intermediate epoch 156",
+    "public_accuracy_percent": 81.1
+  },
+  {
+    "submission": "Attention ResNet control, completed epoch 300",
+    "public_accuracy_percent": 87.8
+  },
+  {
+    "submission": "Pre-activation control, best epoch 389 of 400",
+    "public_accuracy_percent": 88.8
+  },
+  {
+    "submission": "Attention600, best epoch 583, mirror/translation TTA",
+    "public_accuracy_percent": 88.8
+  },
+  {
+    "submission": "SAM600, best epoch 575, mirror/translation TTA",
+    "public_accuracy_percent": 89.6
+  },
+  {
+    "submission": "SLA+SD600, best epoch 588, mirror/translation TTA and joint-head vote",
+    "public_accuracy_percent": 90.1
+  },
+  {
+    "submission": "Plain control600, full 50k, final checkpoint with TTA",
+    "public_accuracy_percent": 88.7
+  },
+  {
+    "submission": "SLA800, 49k/1k split, best epoch 704 with TTA and joint vote",
+    "public_accuracy_percent": 89.6
+  },
+  {
+    "submission": "Original SLA600 extended to 800, best epoch 748 with TTA",
+    "public_accuracy_percent": 89.4
+  },
+  {
+    "submission": "SLA+SD+SAM600, best epoch 598, mirror/translation TTA and joint-head vote",
+    "public_accuracy_percent": 91.2
+  },
+  {
+    "submission": "SLA+SD+SAM + RandAugment600, best epoch 586 with the same inference policy",
+    "public_accuracy_percent": 90.6
+  }
+]

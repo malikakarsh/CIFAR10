@@ -1,0 +1,25 @@
+{
+  "name": "sam800_49k_val1k_sweep000",
+  "parameters": 4696394,
+  "epochs_completed": 264,
+  "best_metrics": {
+    "epoch": 254,
+    "lr": 0.07768632756174237,
+    "train_loss": 0.9351136941520535,
+    "train_accuracy_mixup_weighted": 0.8103469387755102,
+    "val_loss": 0.26265391159057616,
+    "val_accuracy": 0.938,
+    "seconds": 20.42366296199907
+  },
+  "final_metrics": {
+    "epoch": 264,
+    "lr": 0.0760198529039426,
+    "train_loss": 0.929673229314843,
+    "train_accuracy_mixup_weighted": 0.8133061224489796,
+    "val_loss": 0.3180922107696533,
+    "val_accuracy": 0.924,
+    "seconds": 21.084399646992097
+  },
+  "split_sha256": "a45dd36a642481c492117a8b3a8671c244ad66005b1ebc572ec2f2ced7bf4eb9",
+  "last_checkpoint_source": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/a100_800_val1k/sam800_49k_val1k_sweep000_20261101T121129Z_21f80e/last.pt"
+}

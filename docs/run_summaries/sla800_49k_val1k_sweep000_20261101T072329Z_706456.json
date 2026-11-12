@@ -1,0 +1,35 @@
+{
+  "run": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/a100_800_val1k/sla800_49k_val1k_sweep000_20261101T072329Z_706456",
+  "name": "sla800_49k_val1k_sweep000",
+  "parameters": 4706674,
+  "epochs_completed": 800,
+  "best_metrics": {
+    "epoch": 704,
+    "lr": 0.0035549708187568143,
+    "train_loss": 1.2019917362758092,
+    "train_accuracy_mixup_weighted": 0.9346734693877551,
+    "val_loss": 0.08816006183624267,
+    "val_accuracy": 0.987,
+    "seconds": 21.17422750499827,
+    "train_joint_loss": 0.47303384497700907,
+    "train_distillation_loss": 0.06120929404302519,
+    "train_classification_loss": 0.6677485984490842
+  },
+  "final_metrics": {
+    "epoch": 800,
+    "lr": 0.0,
+    "train_loss": 1.046847685113245,
+    "train_accuracy_mixup_weighted": 0.9541428571428572,
+    "val_loss": 0.09523531222343445,
+    "val_accuracy": 0.985,
+    "seconds": 21.30669035599567,
+    "train_joint_loss": 0.368821208681379,
+    "train_distillation_loss": 0.0530763431909133,
+    "train_classification_loss": 0.6249501360095278
+  },
+  "split_sha256": "a45dd36a642481c492117a8b3a8671c244ad66005b1ebc572ec2f2ced7bf4eb9",
+  "device": "cuda",
+  "best_val_accuracy": 0.987,
+  "best_checkpoint": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/a100_800_val1k/sla800_49k_val1k_sweep000_20261101T072329Z_706456/best.pt",
+  "last_checkpoint": "/home/am15764/cifar10-work/CIFAR-10/runs_hpc/a100_800_val1k/sla800_49k_val1k_sweep000_20261101T072329Z_706456/last.pt"
+}
